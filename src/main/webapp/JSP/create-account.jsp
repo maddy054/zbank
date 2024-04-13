@@ -1,0 +1,81 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers</title>
+  
+     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/navigation.css">
+    <link rel="icon" type="image/x-icon" href="<%= request.getContextPath() %>/IMAGE/zbi.png">
+    
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="<%= request.getContextPath() %>/IMAGE/zbi.png" alt="zbi logo" usemap="#logo">
+        </div>
+        <map name="logo">
+      	 	 <area shape="rect" coords="0,0,100,200" href="dashboard" alt="logo">
+        </map>
+        <div class="top">
+            <nav class="topnav">   
+              <a class ="other-nav" href="search-customer">Customer</a>
+                <a class ="this-nav">Accounts</a>
+                <a class="other-nav" href="transaction">Transaction</a>
+                <a class="other-nav" href="statement">Statement</a>
+                <a class="other-nav" href="profile">Profile</a>
+                
+            </nav>
+        </div>
+        <div class="logout">
+			<img src="<%= request.getContextPath() %>/IMAGE/log-out.png" usemap="#logout-map">
+        </div>
+        <map name="logout-map">
+       <area shape="rect" coords="0,0,100,200" href="logout" alt="logout">
+        </map>
+    </header>
+     <div class="overall">
+    <div class="main-container">
+        
+        <div class="selection"> 
+        	<a class="other-detail" href="search-account">Search Account</a>
+            <a class="other-detail" href="all-account">All Accounts</a>
+            <a class="this-detail">Create Account</a>
+            <a class="other-detail" href="deactivate-account">Deactivate Account</a>
+        </div>
+    </div>
+     <div class="initial-input">
+    <div class="outer-container">
+        <div class="image-container">
+            <img src="<%= request.getContextPath() %>/IMAGE/account-creation.png" alt="account-creation" >
+        </div>
+        <div class="form-container">
+            <form action="create-account" method="post">
+                <div>
+                    <label for="userid">user Id </label>
+                    <input type="text" name="userId" class="input" min=1 max=1000 title="Please enter a valid user id" placeholder="Enter User Id">
+                </div>
+      
+               <div>
+                <label for="type">Account Type</label>
+                <select class="input" name="type">
+                    <option disabled selected>Select Account</option>
+                    <option > CURRENT</option>
+                    <option > SAVINGS</option>
+                    <option > SALARY</option>
+                    <option > FIXED_DEPOSIT</option>
+                    
+                </select>
+                <div class="btn">
+                    <button type="submit">create Account</button>
+                </div>
+               
+                   </div>
+            </form>
+           
+        </div>
+       </div>
+       </div>
+    </div>
+</body>

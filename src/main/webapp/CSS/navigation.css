@@ -1,0 +1,549 @@
+body, html {
+    height: 100%;
+    margin: 0;
+     display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #182546;
+    padding: 10px 20px;
+    display: flex;
+}
+
+@media only screen and (min-width: 600px) {
+.logo img {
+
+    max-height: 100px;
+    width: 150px;
+    cursor: pointer;
+
+}
+}
+.top{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-right:5%;
+}
+
+.topnav {
+    display: flex; 
+    align-items: center;
+}
+
+.topnav a {
+    text-align: center; 
+    padding: 20px 20px; 
+    text-decoration: none; 
+    font-size: large;
+}
+.other-nav{
+    display: flex;
+    align-items: center;
+    color: #fff;
+    border-radius: 10px;
+}
+.this-nav{
+    display: flex;
+    align-items: center;
+    background-color: #a7c4df;
+    border-radius: 10px;
+    
+    color: #000000; 
+}
+.other-nav:hover {
+    background-color: #284a88;
+}
+
+.logout{
+	display: flex;
+
+	align-items: center;
+}
+.logout img{
+	height: 60px;
+	cursor: pointer;
+	
+}
+
+.overall{
+	display: flex;
+	height: 100%;
+}
+
+	
+.main-container{
+
+	background-color: #243664;
+  	
+    width:250px;
+    
+
+}
+
+.initial-input{
+	
+	width:100%;
+	justify-content: center;
+}
+.selection{
+
+    margin-top: 50px;
+    flex-direction:column;
+    
+    height: 50px;
+    border-radius: 10px;
+    color: #fff;
+    margin-left: 0%;
+}
+
+.selection a{
+    display: flex;
+    border-radius: 10px;
+    align-items: center;
+    padding: 20px;
+}
+
+.this-detail{
+    background-color: #a7c4df;
+
+    color: #000000;
+}
+
+.other-detail{
+    background-color: #243664;
+    color: #fff;
+    text-decoration: none;
+}
+.other-detail:hover{
+ background-color: 	#284a88;
+ 
+}
+
+.outer-container{
+    display: flex;
+ 
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+}
+.image-container img{
+    display: flex;
+   max-height: 700px;
+   
+}
+
+.form-container{
+    display: flex;
+    justify-content: center;
+    margin-left: 50px;
+   
+
+}
+#editPage{
+	display: none;
+	justify-content:center;
+	background-color:white;
+    position: fixed; 
+	width:100%;
+	margin:auto;
+   flex-direction:column;
+     padding: 20px
+     
+}
+
+
+.input-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    
+}
+.left-container,
+.right-container{
+    display: flex;
+    
+    justify-content: center;
+    flex-direction: column;
+}
+
+.left-container{
+    margin-right: 50px;
+}
+
+.login-right-container{
+
+    padding: 20px;
+    border: solid 1px rgb(53, 132, 228);
+    border-radius: 10px ;
+   
+}
+.intro-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+
+.input:focus{
+    outline: none;
+    
+}
+.input{
+    display: flex;
+    margin: 10px;
+    border: none;
+    border-right: solid 2px #4766bb;
+    height: 50px;
+    width: 300px;
+    background-color: aliceblue;
+    font-size: medium;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn{
+    display: flex;
+    margin-top: 30px;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.btn button{
+    width: auto;
+    border-radius: 50px;
+    background-color: #142c6d;
+    color: white;
+    padding:  10px 30px 10px 30px;
+    font-size: medium;
+    border: none;
+}
+
+.btn button:hover{
+    background-color: #9eb9ff ;
+    color: black;
+}
+
+
+
+.transaction-dropdown {
+    display: flex;
+    margin-top: 40px;
+    justify-content: center;
+    
+}
+.table{	
+	margin-top: 3%;
+	height: fit-content;
+	width: 100%;
+}
+
+
+.statement-form{
+    display: flex;
+    justify-content: center;
+    margin-top:3%; 
+ 
+}
+.table  th{
+	padding: 10px 0px 10px 0px;
+    background-color:#284a88;;
+    border-collapse: collapse;
+    color: white;
+
+}
+
+.table tr:nth-child(odd) {
+  background-color: hsl(206, 95%, 36%,0.1);
+}
+
+.table th,td{
+	padding: 10px 0px 10px 0px;
+	text-align: center;
+	font-size: medium;
+}
+
+
+.prev-next-nav{
+    display: flex;
+    justify-content: center;
+    max-height: auto;
+}
+.prev-next-nav img{
+    width: 120px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+/*profile*/
+
+
+.profile-left-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+.profile-left-container img{
+    height: 100px;
+    margin-bottom: 10%;
+}
+
+.user-image{
+    margin-bottom: 12%;
+    position: fixed;
+}
+
+.profile-name{
+    background-color: hsl(206, 95%, 36%,0.2);
+    text-align: center;
+    padding: 30px;
+    border-radius: 10px;
+
+}
+
+.profile-info{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    background-color: hsl(206, 95%, 36%,0.2);
+    border-radius: 10px;
+    padding: 30px;
+}
+
+.profile-right-container{
+    display: flex;
+    
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 5%;
+}
+
+.profile-info div {
+    background-color: aliceblue;
+    border-right: solid 2px #4766bb;
+    padding: 10px;
+    margin-bottom: 10px; 
+}
+
+.profile-info img{
+    height: 20px;
+    
+}
+.profile-info label {
+    margin-right: 10px;
+    font-weight: bold;
+
+}
+
+.profile-info span {
+    font-size: 16px;
+
+
+}
+
+.status{
+	display:flex;
+	width:fit-content;
+	margin:auto;
+	justify-content:center;
+	padding: 0px 20px 0px 20px;
+	background-color:rgb(220, 229, 255);
+	color: red;
+	margin-top: 20px;
+	align-items: center;
+	border-right: solid 1px red; 
+}
+
+.password{
+	display:flex;
+	justify-content: center;
+}
+
+/* accounts*/
+
+
+.account-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(220, 229, 255);
+    border-radius: 10px;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+
+
+.account-container h3{
+    background-color: hsla(209, 15%, 65%, 0.5);
+    padding: 10px 50px 10px 50px;
+}
+
+/* index */
+
+.bank-name{
+    display: flex;
+    color: white;
+    background-color: antiquewhite;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container-dash img{
+    max-height: 700px;
+}
+.para{
+    text-align: center;
+    margin-left: 20px;
+
+}
+
+.para p{
+   font-size: 40px;
+   font-style: italic;
+   margin-bottom: 10%;
+
+
+}
+.dash-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+
+.login-button{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    width: fit-content;
+
+}
+
+.login-button button:hover{
+    cursor: pointer;
+    color: black;
+    background-color: #9eb9ff ;
+    
+}
+
+.login-button button{
+	 
+    background-color: #142c6d;
+     text-decoration: none;
+    color: white;
+
+    border-radius: 10px;
+     padding: 20px;
+}
+
+/* pagination */
+
+
+.page{
+  
+    background-color: #142c6d;
+    color: white;
+    width: auto;
+    margin:0px 20px 0px 20px;
+    padding: 10px;
+    text-decoration: none;
+    border: none;
+    display:flex;
+    justify-content: center;
+  
+}
+
+.this-page{
+	background-color: #a7c4df;	
+	 margin :0px 20px 0px 20px;
+    padding: 10px;
+      border: none;
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+	margin-top:30px;
+    
+}
+
+
+.page:hover{
+    background-color: #9eb9ff ;
+    color: black;
+
+}
+
+/* employee-style */
+
+.dash-containers{
+    display: flex;
+    height: 100%;
+}
+
+.dash-left-container{
+    background-color: hsl(207, 75%, 89%,0.3);
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5%;
+    font-size: large;
+}
+
+.dash-right-container{
+    background-color: hsla(208, 27%, 19%, 0.1);
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.detail-container{
+    display: flex;
+    margin:20px;
+}
+
+.detail-container i{
+    margin-right: 10px;
+}
+.employee-dash-container{
+    background-color: hsla(211, 75%, 87%, 0.3);
+    outline:1px solid rgb(132, 132, 168);
+    width:30%;
+    height: 30%;
+    margin: auto;
+    text-align: center;
+    border-radius: 5px;
+    color: black;
+}
+
+
+.employee-dash-container h3{
+    background-color: hsla(209, 15%, 65%, 0.5);
+    padding: 10px 50px 10px 50px;
+}
+
+.employee-dash-container p{
+    cursor: pointer;
+}
+
+
+@media only screen and (max-width: 768px) {
+	.image-container img{
+	height: 0px;
+	}
+	.logo img{
+	height: 50px;
+	display: flex;
+
+	}
+	
+	
+}
