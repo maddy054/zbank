@@ -25,6 +25,7 @@ import com.zbank.models.Account;
 import com.zbank.models.Branch;
 import com.zbank.models.Customer;
 import com.zbank.models.Employee;
+import com.zbank.models.OperationLog;
 import com.zbank.models.Transaction;
 import com.zbank.models.TransactionReq;
 import com.zbank.models.User;
@@ -266,13 +267,14 @@ public class DbConnector implements Connector {
 			if(customerList.size() == 0) {
 				throw new BankingException(ErrorCode.INVALID_CUSTOMER);
 			}
-			getUser(customer, userId);
 			setCustomer(customer,customerList.get(0));
+			getUser(customer, userId);
+			return customer;
 			
 		} catch (SQLException e) {
 			throw new BankingException(e.getMessage(), e);
 		}
-		return customer;
+		
 
 	}
 	
@@ -299,8 +301,8 @@ public class DbConnector implements Connector {
 			}
 			
 			int branchId = (int) result.get(0).get(2);
-			getUser(employee, userId);
 			employee.setBranchId(branchId);
+			getUser(employee, userId);
 			
 			return employee;
 		}catch(SQLException e) {
@@ -582,7 +584,7 @@ public class DbConnector implements Connector {
 			throw new BankingException(e.getMessage(), e);
 		}
 	}
-	private int getUsersId(long mobile) throws BankingException {
+	public int getUsersId(long mobile) throws BankingException {
 
 		try {
 			QueryBuilder queryBuilder = new QueryBuilder(Table.USER.get());
@@ -624,6 +626,11 @@ public class DbConnector implements Connector {
 		user.setGender(Gender.values()[(int) map.get(7)]);
 		user.setStatus(Status.values()[(int) map.get(8)]);
 		user.setRole(UserType.values()[(int) map.get(9)]);
+		user.setCreatedTime((long) map.get(10));
+		if(map.get(11) != null) {
+			user.setModifiedTime((long) map.get(11));
+		}
+		user.setCreatedBy((int) map.get(12));
 		
 	}
 	public List<Object> getUserDetails(User user) {
@@ -831,12 +838,59 @@ public class DbConnector implements Connector {
 	public void updateUser(User user) throws BankingException {
 		try {
 			QueryBuilder queryBuilder = new  QueryBuilder(Table.USER.get());
-			String query = queryBuilder.column(3,4,5,6,7,11,12).where(1).buildUpdate();
-			queryBuilder.execute(query, user.getName(),user.getMobile(),user.getEmail(),user.getAge(),user.getGender().ordinal(),user.getModifiedTime(),user.getModifiedBy(),user.getUserId());
+			String query = queryBuilder.column(3,4,5,6,7,11).where(1).buildUpdate();
+			queryBuilder.execute(query, user.getName(),user.getMobile(),user.getEmail(),user.getAge(),user.getGender().ordinal(),user.getModifiedTime(),user.getUserId());
 			
 		}catch(SQLException e) {
 			throw new BankingException(e.getMessage());
 		}
 	}
-
+	public void updateLog(OperationLog log) throws BankingException {
+		try {	
+			QueryBuilder queryBuilder = new QueryBuilder(Table.LOG.get());
+			String query = queryBuilder.buildInsert();
+			queryBuilder.execute(query, log.getTarget(),log.getUser(),log.getTime(),log.getDescription());
+			
+		}catch(SQLException e) {
+			throw new  BankingException(e.getMessage());
+		}
+	}
+	public List<OperationLog> getLogs(int userId) throws BankingException {
+		try {
+			List<OperationLog> logList = new ArrayList<>();
+			QueryBuilder queryBuilder = new QueryBuilder(Table.LOG.get());
+			String query = queryBuilder.where(1).buildSelect();
+			List<Map<Integer, Object>> result = queryBuilder.executeQuery(query, userId);
+			for(Map<Integer,Object> resultMap : result) {
+				OperationLog log = new OperationLog();
+				log.setTarget((int) resultMap.get(1));
+				log.setUser((int) resultMap.get(2));
+				log.setTime((long) resultMap.get(3));
+				log.setDescription((String) resultMap.get(4));
+				logList.add(log);
+			}
+			return logList;
+			
+		}catch(SQLException e) {
+			throw new BankingException(e.getMessage());
+		}
+	}
+	public OperationLog getRecentLogs(int userId) throws BankingException {
+		try {
+			OperationLog log = new OperationLog();
+			QueryBuilder queryBuilder = new QueryBuilder(Table.LOG.get());
+			String query = "SELECT * FROM USER_DETAILS WHERE OPERATION_LOG = ? AND TIME = (SELECT MAX(TIME) FROM OPERATION_LOG)";
+			List<Map<Integer, Object>> result = queryBuilder.executeQuery(query, userId);
+			Map<Integer,Object> resultMap = result.get(0);
+			if(resultMap != null) {
+				log.setTarget((int) resultMap.get(1));
+				log.setUser((int) resultMap.get(2));
+				log.setTime((long) resultMap.get(3));
+				log.setDescription((String)resultMap.get(4));
+			}
+			return log;
+		}catch(SQLException e) {
+			throw new BankingException(e.getMessage());
+		}
+	}
 }

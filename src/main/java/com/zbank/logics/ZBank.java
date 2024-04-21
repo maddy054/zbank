@@ -15,6 +15,7 @@ import com.zbank.models.Account;
 import com.zbank.models.Branch;
 import com.zbank.models.Customer;
 import com.zbank.models.Employee;
+import com.zbank.models.OperationLog;
 import com.zbank.models.Transaction;
 import com.zbank.models.TransactionReq;
 import com.zbank.models.User;
@@ -47,6 +48,7 @@ public class ZBank {
 		synchronized (lock) {
 			String password =  SHAHash.getHash(emploee.getPassword());
 		    emploee.setPassword(password);
+		    emploee.setRole(UserType.EMPLOYEE);
 			dbConnector.addEmployee(emploee);	
 		}
 		
@@ -195,10 +197,6 @@ public class ZBank {
 	
    public List<Transaction> getAccountTransaction(TransactionReq requirement) throws BankingException{
 	   
-	   long accountNumber = requirement.getAccountNumber();
-	   dbConnector.verifyAccount(requirement.getUserId(),accountNumber);
-	   
-	  
 	   return dbConnector.getTransactionDetail(requirement);
    }
   
@@ -254,5 +252,17 @@ public class ZBank {
    }
    public void updateEmployee(Employee employee) throws BankingException {
 	   dbConnector.updateUser(employee);
+   }
+   public void updateLog(OperationLog log) throws BankingException {
+	   dbConnector.updateLog(log);
+   }
+   public OperationLog getRecentLog(int userId) throws BankingException {
+	  return  dbConnector.getRecentLogs(userId);
+   }
+   public List<OperationLog> getAllLogs(int userId) throws BankingException {
+	   return dbConnector.getLogs(userId);
+   }
+   public int getUsersId(long mobile) throws BankingException {
+	   return dbConnector.getUsersId(mobile);
    }
 }

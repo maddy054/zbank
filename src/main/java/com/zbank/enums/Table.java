@@ -6,7 +6,8 @@ public enum Table {
 	CUSTOMER("CUSTOMER_DETAILS"),
 	ACCOUNTS("ACCOUNT_DETAILS"),
 	BRANCH("BRANCH_DETAILS"),
-	TRANSACTION("TRANSACTION_DETAILS");
+	TRANSACTION("TRANSACTION_DETAILS"),
+	LOG("OPERATION_LOG");
  
 	private final String tableName;
     private	Table(String tableName) {

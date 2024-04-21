@@ -19,7 +19,14 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/customer-detail.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/navigation.css">
     <link rel="icon" type="image/x-icon" href="<%= request.getContextPath() %>/IMAGE/zbi.png">
+    <script type="text/javascript">
+    	function getDetails(){
+    		document.getElementById("table").style.display = "none";
+    		document.getElementById("inputContainer").style.display = "flex";
+    	}
+    	
     
+    </script>
 </head>
 <body>
     <header>
@@ -82,8 +89,8 @@
             <%} %>
         </div>
     </div>
- 
-       <div class="initial-input">
+     
+       <div class="initial-input" id="table">
     <table class="table">
        <% if(type == "customer"){
             
@@ -101,10 +108,11 @@
                 <th>Status</th>
              </tr>
             <% for(Customer customer : customers){%>
+           
             
-               <tr>
+               <tr >
                 <td><%= customer.getUserId() %></td>
-                <td><%= customer.getName() %></td>
+                <td ><%= customer.getName() %></td>
                 <td><%= customer.getEmail() %></td>
                 <td><%= customer.getMobile() %></td>
                 <td><%= customer.getAadhar() %></td>

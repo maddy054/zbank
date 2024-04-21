@@ -3,6 +3,8 @@ package com.zbank.servlet;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,17 +27,19 @@ import com.zbank.models.Account;
 import com.zbank.models.Branch;
 import com.zbank.models.Customer;
 import com.zbank.models.Employee;
+import com.zbank.models.OperationLog;
 import com.zbank.models.Transaction;
 import com.zbank.models.TransactionReq;
 import com.zbank.models.User;
 
 public class RequestHandler {
-	
+	ExecutorService service = Executors.newFixedThreadPool(5);	
 	int limit = 15;
 	public void doTransaction(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
+		
 		ZBank zbank = new ZBank();
-		Transaction transaction = new Transaction();
+		Transaction transaction = new Transaction();	
 		transaction.setCreatedTime(System.currentTimeMillis());
 		transaction.setModifiedBy((int)request.getSession(false).getAttribute("userId"));
 		if(request.getParameter("accountNumber") != null) {
@@ -85,7 +89,8 @@ public class RequestHandler {
 		Customer customer = new Customer();
 		
 		customer.setName(request.getParameter("name"));
-		customer.setMobile(Long.parseLong( request.getParameter("mobile")));
+		long mobile = Long.parseLong( request.getParameter("mobile"));
+		customer.setMobile(mobile);
 		customer.setEmail(request.getParameter("email"));
 		customer.setAge(Integer.parseInt(request.getParameter("age")));
 		customer.setGender(Gender.valueOf(request.getParameter("gender")));
@@ -94,12 +99,16 @@ public class RequestHandler {
 		customer.setPan(request.getParameter("pan"));
 		customer.setPassword(request.getParameter("password"));
 		customer.setRole(UserType.CUSTOMER);
-		
-		customer.setCreatedTime(System.currentTimeMillis());
+		long time = System.currentTimeMillis();
+		customer.setCreatedTime(time);
 		customer.setModifiedBy((int)request.getSession().getAttribute("userId"));
 		request.setAttribute("type", "customer");
+		
 		try {
 			zbank.addCustomer(customer);
+			LogExecutor logExecutor = new LogExecutor();
+			logExecutor.updateLog(getLog(request, zbank.getUsersId(mobile), "Customer created"));
+
 		} catch (BankingException e) {
 		
 			e.printStackTrace();
@@ -114,9 +123,11 @@ public class RequestHandler {
 		if(request.getParameter("userId") != null) {
 			
 			int userId =Integer.parseInt(request.getParameter("userId"));
+			
 			try {
 				zbank.userDeactivate(userId, Status.INACTIVE);
-				
+				LogExecutor logExecutor = new LogExecutor();
+				logExecutor.updateLog(getLog(request, userId, "Customer deactivated"));
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/deactivate-customer.jsp");
 				dispatcher.forward(request, response);
 			} catch (BankingException e) {
@@ -211,6 +222,10 @@ public class RequestHandler {
 	account.setModifiedBy((int)request.getSession().getAttribute("userId"));
 	
 	zbank.addAccount(account);
+	
+	LogExecutor logExecutor = new LogExecutor();
+	logExecutor.updateLog(getLog(request, userId, "Account created"));
+	
 	RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/create-account.jsp");
 	dispatcher.forward(request, response);
 	
@@ -221,6 +236,9 @@ public class RequestHandler {
 		long accountNumber = Long.parseLong(request.getParameter("accountNumber"));
 		
 		zbank.accountDeactivate(accountNumber,Status.INACTIVE);
+		LogExecutor logExecutor = new LogExecutor();
+		logExecutor.updateLog(getLog(request, zbank.getUserId(accountNumber), "Account deactivated"));
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/deactivate-account.jsp");
 		dispatcher.forward(request, response);
 
@@ -353,9 +371,12 @@ public class RequestHandler {
 	   public void createEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		   ZBank zbank = new ZBank();
 		   
+		   
+		   
 		   Employee employee = new Employee();
 		   	employee.setName(request.getParameter("name"));
-			employee.setMobile(Long.parseLong( request.getParameter("mobile")));
+		   	long mobile = Long.parseLong( request.getParameter("mobile"));
+			employee.setMobile(mobile);
 			employee.setEmail(request.getParameter("email"));
 			employee.setAge(Integer.parseInt(request.getParameter("age")));
 			employee.setGender(Gender.valueOf(request.getParameter("gender")));
@@ -370,6 +391,8 @@ public class RequestHandler {
 			dispatcher.forward(request, response);
 			try {
 				zbank.addEmployees(employee);
+				LogExecutor logExecutor = new LogExecutor();
+				logExecutor.updateLog(getLog(request, zbank.getUsersId(mobile), "Employee created"));
 			}catch(BankingException e) {
 				e.printStackTrace();
 			}
@@ -435,6 +458,8 @@ public class RequestHandler {
 		   ZBank zbank = new ZBank();
 		   try {
 			zbank.changePassword(userId,oldPass, newPass);
+			LogExecutor logExecutor = new LogExecutor();
+			logExecutor.updateLog(getLog(request, userId, "Customer created"));
 			request.setAttribute("message", "Password changed successfully!");
 		} catch (BankingException e) {
 			ErrorCode error = e.getErrorCode();
@@ -460,6 +485,12 @@ public class RequestHandler {
 			   request.setAttribute("type", "customer");
 			   customer = zbank.getCustomerDetails(Integer.parseInt(request.getParameter("userId")));
 			   request.setAttribute("user", customer);
+			   int createdBy = customer.getCreatedBy();
+			   String createdName = "Unavailable";
+			   if(createdBy != 0) {
+				 createdName =    zbank.getEmployeeDetails(customer.getCreatedBy()).getName();
+			   }
+			   request.setAttribute("createdBy",createdName);
 			
 		} catch ( BankingException e) {
 			
@@ -519,7 +550,14 @@ public class RequestHandler {
 			   Employee employee =  zbank.getEmployeeDetails(Integer.parseInt( request.getParameter("userId")));
 			  request.setAttribute("type", "employee");
 			  request.setAttribute("user", employee);
-			   
+			  int createdBy = employee.getCreatedBy();
+			  String createdUser = "Unavailable";
+			  
+			  if(createdBy != 0) {
+				  createdUser = zbank.getEmployeeDetails(createdBy).getName();
+			  }
+			  request.setAttribute("createdBy",createdUser) ;
+			  
 		   }catch(BankingException e) {
 			   ErrorCode error = e.getErrorCode();
 			   if(error == ErrorCode.INVALID_EMPLOYEE || error == ErrorCode.WRONG_USER_ID) {
@@ -560,9 +598,13 @@ public class RequestHandler {
 			   customer.setPan(request.getParameter("pan"));
 			   customer.setAddress(request.getParameter("address"));
 			   customer.setModifiedTime(System.currentTimeMillis());
-			   customer.setModifiedBy((int) request.getSession(false).getAttribute("userId"));
+			   
 			   zbank.updateCustomer(customer);
+			   
+			   LogExecutor logExecutor = new LogExecutor();
+			logExecutor.updateLog(getLog(request, userId, "Customer updated"));
 			   handleSearchCustomer(request, response);
+			  
 		   }catch(BankingException e) {
 			   e.printStackTrace();
 			  request.setAttribute("message", "Update Failed");
@@ -577,16 +619,21 @@ public class RequestHandler {
 	   public void handleEditEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		   ZBank zbank = new ZBank();
 		   try {
+			   
+			   
 			   int userId =Integer.parseInt(request.getParameter("userId"));
 			   Employee employee = zbank.getEmployeeDetails(userId);
 			   employee.setName(request.getParameter("name"));
 			   employee.setMobile(Long.parseLong( request.getParameter("mobile")));
 			   employee.setEmail(request.getParameter("email"));
 			   employee.setModifiedTime(System.currentTimeMillis());
-			   employee.setModifiedBy((int)request.getSession(false).getAttribute("userId"));
 			   
+				
 			   zbank.updateEmployee(employee);
+			   LogExecutor logExecutor = new LogExecutor();
+			logExecutor.updateLog(getLog(request, userId, "Employee updated"));
 			   handleSearchEmployee(request, response);
+			  
 		   }catch(BankingException e) {
 			   e.printStackTrace();
 			   request.setAttribute("message", "Update Failed ");
@@ -595,5 +642,14 @@ public class RequestHandler {
 				dispatcher.forward(request, response);
 			}
 		   
+	   }
+	   public OperationLog getLog(HttpServletRequest request,int userId,String description) {
+		   OperationLog log = new OperationLog();
+			log.setTarget(userId);
+			log.setUser((int)request.getSession(false).getAttribute("userId"));
+			log.setTime(System.currentTimeMillis());
+			log.setDescription(description);
+			return log;
+			
 	   }
 }

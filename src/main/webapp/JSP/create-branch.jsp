@@ -39,6 +39,7 @@
     <div class="main-container">
         
         <div class="selection"> 
+        
       	 	<a class="other-detail" href="search-branch">Search Branch</a>
             <a class="other-detail" href="all-branches">All Branch</a>
             <a class="this-detail">New Branch</a>

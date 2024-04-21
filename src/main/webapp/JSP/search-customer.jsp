@@ -1,9 +1,11 @@
     
-    <%@page import="com.zbank.models.Employee"%>
+<%@page import="java.time.ZoneId"%>
+<%@page import="java.time.Instant"%>
+<%@page import="com.zbank.models.Employee"%>
 <%@page import="com.zbank.models.Customer"%>
 <%@page import="com.zbank.enums.UserType"%>
-        
-    <%@page import="com.zbank.models.User"%>
+<%@page import="com.zbank.models.User"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -20,12 +22,11 @@
   
 	 	document.getElementById("editPage").style.display = "flex";
 	 	document.getElementById("inputContainer").style.display="none";
+	 	document.getElementById("btn").style.display="none";
     }
     function hideEditPage(){
     	document.getElementById("editPage").style.display = "none";
     }
-    
-    
     </script>
     
 </head>
@@ -108,6 +109,7 @@
          <div class="btn">
             <button type="submit">Submit</button>
          </div>
+       
     </form>
     
      <% Object messageObj = request.getAttribute("message");
@@ -125,7 +127,7 @@
     
     if(userObj != null){%>
     
-    <% User user = (User) userObj; 
+    <% User user = (User) userObj; 	
     
     if(type == "customer"){%>
      <form action="edit-customer" method="post">
@@ -150,10 +152,7 @@
              	<div>
              		<label for="changeMail">Email</label>
              		<input class="input" id="changeEmail" name = "email" value="<%=user.getEmail() %>">
-             		
              	</div>
-             	
-   
              </div>
              	
            <%  if(type == "customer"){ 
@@ -161,66 +160,66 @@
           
              %>
                     
-               <div class="right-container">
-               <div>
+               <div class="left-container">
+                 <div>
              		<label for="changeAddress">Address</label>
              		<input class="input" id="changeAddress" name="address" value="<%=customer.getAddress() %>">
-             	</div>
-             	
-             	<div>
+                 </div>
+              	
+             	 <div>
              		<label for="changeAadhar">Aadhar</label>
              		<input class="input" id="changeAadhar" name="aadhar" value="<%=customer.getAadhar() %>">
-             	</div>
+             	 </div>
              	
-             	<div>
+             	 <div>
              		<label for="changePan">PAN </label>
              		<input class="input" id="changePan" name="pan" value="<%=customer.getPan() %>">
-             	</div>
+             	 </div>
                </div>
              	
              <%} %>
              </div>
+             <div >
             <div onclick="hideEditPage();" class="btn">
-            
             	<button>Change</button>
             </div>
-             
-             
-             </div>
-              </form>
+           </div>
+          </div>
+         </form>
     
-    
-    
+     <div id="edit-container">
           <div class="input-container" id="inputContainer">
-               
-               
-               
            	<div class="left-container">
                 <div >
-                <i class="fa-solid fa-user"></i>
+                    <i class="fa-solid fa-user"></i>
                     <label for="name">Name</label>
                     <span class="input"> <%=user.getName() %></span>
                 </div>
                 
                 <div >
-                <i class="fa-solid fa-mobile"></i>
+                    <i class="fa-solid fa-mobile"></i>
                     <label for="mobile">Mobile</label>
                     <span class="input"><%=user.getMobile() %> </span>
                 </div>
                 
                 <div >
-                <i class="fa-solid fa-envelope"></i>	
-                
+                	<i class="fa-solid fa-envelope"></i>	
                     <label for="email">Email</label>
-                     <span class="input"> <%= user.getEmail() %></span>
+                    <span class="input"> <%= user.getEmail() %></span>
                 </div>
+                
                 <% if(type == "customer"){ %>
                 <div >
-                <i class="fa-solid fa-person-half-dress"></i>
+            	    <i class="fa-solid fa-person-half-dress"></i>
                     <label for="gender-text">Gender</label>
-                     <span class="input"> <%= user.getGender() %></span>
+                    <span class="input" id="gender-input"> <%= user.getGender() %></span>
                 </div>
                <%} %>
+               <div>
+                    <i class="fa-solid fa-square-plus"></i>
+               		<label> Created By</label>
+               		<span class="input" ><%= request.getAttribute("createdBy") %></span>
+               </div>
             </div>
             <div class="right-container">
             
@@ -254,25 +253,29 @@
 				
 				Employee employee = (Employee)user;%>
 				 <div >
-				 <i class="fa-solid fa-person-half-dress"></i>
-                    <label for="gender-text">Gender</label>
+				     <i class="fa-solid fa-person-half-dress"></i>
+                     <label for="gender-text">Gender</label>
                      <span class="input"> <%= user.getGender() %></span>
                 </div>
 				 <div >
-				 <i class="fa-solid fa-code-branch"></i> 
+				    <i class="fa-solid fa-code-branch"></i> 
                     <label for="branchId">Branch Id</label>
                     <span class="input"> <%= employee.getBranchId() %></span>
 				</div>
 				
 				<%} %>
-	               
+				  <div>
+				    <i class="fa-solid fa-calendar-days"></i>
+               		<label> Created On</label>
+               		<span class="input" ><%= Instant.ofEpochMilli(user.getCreatedTime()).atZone(ZoneId.of("Asia/Kolkata")).toLocalDate() %></span>
+               </div>
+				
             </div>
-           
         </div>
-           
-           	 <div onclick= "getEditPage();" id="inputContainer"class="btn">
-				<button>Edit Details</button>
-			</div>
+        <div  id="inputContainer"class="btn">
+			<button onclick= "getEditPage();" id="btn">Edit Details</button>
+		</div>
+         </div>
          </div>
              </div>
              <%} %>

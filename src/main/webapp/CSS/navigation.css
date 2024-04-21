@@ -3,6 +3,7 @@ body, html {
     margin: 0;
      display: flex;
     flex-direction: column;
+    font-family:Lato,verdana,arial,sans-serif !important;
 }
 
 header {
@@ -77,7 +78,7 @@ header {
 
 	background-color: #243664;
   	
-    width:250px;
+    width:70px;
     
 
 }
@@ -97,25 +98,26 @@ header {
     color: #fff;
     margin-left: 0%;
 }
-
+.selection i,
 .selection a{
     display: flex;
     border-radius: 10px;
     align-items: center;
     padding: 20px;
 }
-
+#this-detail,
 .this-detail{
     background-color: #a7c4df;
 
     color: #000000;
 }
-
+#other-detail,
 .other-detail{
-    background-color: #243664;
     color: #fff;
     text-decoration: none;
 }
+
+#other-detail:hover,
 .other-detail:hover{
  background-color: 	#284a88;
  
@@ -143,12 +145,12 @@ header {
 }
 #editPage{
 	display: none;
-	justify-content:center;
 	background-color:white;
-    position: fixed; 
+   
+    justify-content:center;
+    
 	width:100%;
-	margin:auto;
-   flex-direction:column;
+    flex-direction:column;
      padding: 20px
      
 }

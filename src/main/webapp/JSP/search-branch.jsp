@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Branch Details</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/navigation.css">
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	
     <link rel="icon" type="image/x-icon" href="<%= request.getContextPath() %>/IMAGE/zbi.png">
     
 </head>
@@ -41,9 +42,11 @@
     <div class="main-container">
         
         <div class="selection"> 
-        	<a class="this-detail" > Search Branch</a>
-            <a class="other-detail" href="all-branches">All Branch</a>
-            <a class="other-detail" href="create-branch">New Branch</a>
+			<i id="this-detail"class="fa-solid fa-magnifying-glass fa-2xl" style="color: #ffffff;"></i>
+			<i id="other-detail"class="fa-solid fa-plus fa-2xl" style="color: #ffffff;"></i>
+			<i id="other-detail"class="fa-duotone fa-users fa-2xl" style="--fa-primary-color: #deddda; --fa-secondary-color: #deddda;"></i>     	
+           <!--  <a class="other-detail" href="all-branches">All Branch</a>
+            <a class="other-detail" href="create-branch">New Branch</a> -->
            
         </div>
     </div>

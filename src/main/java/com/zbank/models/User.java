@@ -16,9 +16,18 @@ public class User{
 	private Gender gender;
 	private UserType role;
 	private long createdTime;
+	private int createdBy;
 	private long modifiedTime;
 	private int modifiedBy;
 	
+	
+	public int getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
+	}
+
 	public long getCreatedTime() {
 		return createdTime;
 	}

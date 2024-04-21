@@ -1,6 +1,8 @@
 package com.zbank.servlet;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
@@ -16,6 +18,8 @@ import javax.servlet.RequestDispatcher;
 public class BankServlet extends HttpServlet {
 	
     private static final long serialVersionUID = 1L;
+    
+    Logger logger = Logger.getLogger(BankServlet.class.getName());
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestHandler handler = new RequestHandler();
@@ -158,21 +162,16 @@ public class BankServlet extends HttpServlet {
 			dispatcher.forward(request, response);
 			break;
 		case "/zbank/service/change-password":
-		
 			dispatcher = request.getRequestDispatcher("/JSP/change-password.jsp");
 			dispatcher.forward(request, response);
 			break;
 			
 		case"/zbank/service/search-customer":
-			
 			request.setAttribute("type", "customer");
-
 			request.getRequestDispatcher("/JSP/search-customer.jsp").forward(request, response);
 			break;
 			
 		case "/zbank/service/search-account":
-			
-		
 			request.getRequestDispatcher("/JSP/search-account.jsp").forward(request, response);
 			break;
 			
@@ -308,10 +307,17 @@ public class BankServlet extends HttpServlet {
 	   
 	   
 	   } catch (BankingException e) {
+		   logger.log(Level.SEVERE,e.getStackTrace().toString());
+		   
 		   ErrorCode error = e.getErrorCode();
+		   logger.log(Level.SEVERE,e.getErrorCode().toString());
+		   
 			if(e.getErrorCode() == ErrorCode.INVALID_SESSION ) {
+				
 				response.sendRedirect("/zbank/service/login");
+				
 			}else if(error == ErrorCode.WRONG_PASSWORD) {
+				
 				request.setAttribute("message","Incorrect Password");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/login.jsp");
 				dispatcher.forward(request, response);		
