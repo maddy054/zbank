@@ -8,6 +8,7 @@ import com.zbank.enums.UserType;
 import com.zbank.exceptions.BankingException;
 
 import com.zbank.models.Account;
+import com.zbank.models.ApiData;
 import com.zbank.models.Branch;
 import com.zbank.models.Customer;
 import com.zbank.models.Employee;
@@ -99,5 +100,9 @@ public interface Connector {
 	public OperationLog getRecentLogs(int userId) throws BankingException ;
 	
 	public int getUsersId(long mobile) throws BankingException ;
+	
+	public void addApi(ApiData api) throws BankingException ;
+	
+	public void validateApi(String api) throws BankingException;
 }
 

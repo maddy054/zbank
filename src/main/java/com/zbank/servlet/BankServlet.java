@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zbank.enums.ErrorCode;
 import com.zbank.exceptions.BankingException;
+import com.zbank.utilities.ApiKeyGenerator;
 
 import javax.servlet.RequestDispatcher;
 
@@ -176,7 +177,7 @@ public class BankServlet extends HttpServlet {
 			break;
 			
 		case "/zbank/service/search-employee":
-			
+			System.out.println(ApiKeyGenerator.generateApiKey());
 			request.setAttribute("type", "employee");
 	
 			request.getRequestDispatcher("/JSP/search-customer.jsp").forward(request, response);

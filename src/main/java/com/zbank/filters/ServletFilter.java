@@ -1,4 +1,4 @@
-package com.zbank.servlet;
+package com.zbank.filters;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

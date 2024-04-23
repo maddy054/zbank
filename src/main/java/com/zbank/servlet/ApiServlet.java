@@ -48,22 +48,40 @@ public class ApiServlet extends HttpServlet{
         out.flush();
     }
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	ApiRequestHandler handler = new ApiRequestHandler();
         response.setContentType("application/json");
         
-      //  String json = new String();
+       String json = new String();
         switch (request.getRequestURI()){
         
         case "/zbank/api/createCustomer":
-        	handler.handleAddEmployee(request);
+        	json = handler.handleAddEmployee(request);
         	break;
+        	
+        case "/zbank/api/createEmployee":
+        	json = handler.handleAddCustomer(request);
         }
-    	
+        PrintWriter out = response.getWriter();
+		out.print(json);
+        out.flush();
     }
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) {
-		
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	ApiRequestHandler handler = new ApiRequestHandler();
+        response.setContentType("application/json");
+        
+       String json = new String();
+        switch (request.getRequestURI()){
+        
+        case "/zbank/api/customer":
+        	json = handler.handleAddEmployee(request);
+        	break;
+        	
+        }
+        PrintWriter out = response.getWriter();
+		out.print(json);
+        out.flush();
 	}
     
     

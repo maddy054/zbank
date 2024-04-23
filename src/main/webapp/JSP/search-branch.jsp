@@ -42,11 +42,9 @@
     <div class="main-container">
         
         <div class="selection"> 
-			<i id="this-detail"class="fa-solid fa-magnifying-glass fa-2xl" style="color: #ffffff;"></i>
-			<i id="other-detail"class="fa-solid fa-plus fa-2xl" style="color: #ffffff;"></i>
-			<i id="other-detail"class="fa-duotone fa-users fa-2xl" style="--fa-primary-color: #deddda; --fa-secondary-color: #deddda;"></i>     	
-           <!--  <a class="other-detail" href="all-branches">All Branch</a>
-            <a class="other-detail" href="create-branch">New Branch</a> -->
+			<a class="this-detail" >Search Branch</a>    	
+            <a class="other-detail" href="all-branches">All Branch</a>
+            <a class="other-detail" href="create-branch">New Branch</a> 
            
         </div>
     </div>

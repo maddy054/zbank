@@ -20,6 +20,7 @@ import com.zbank.models.Customer;
 import com.zbank.models.Employee;
 import com.zbank.models.Transaction;
 import com.zbank.models.TransactionReq;
+import com.zbank.models.User;
 import com.zbank.utilities.JSONConverter;
 
 public class ApiRequestHandler {
@@ -132,26 +133,60 @@ public class ApiRequestHandler {
 		
 	}
 
-	public void handleAddEmployee(HttpServletRequest request) {
+	public String handleAddEmployee(HttpServletRequest request) {
 		HashMap<String, Object> json = JSONConverter.getMapFromJson(request);
 		Employee employee = new Employee();
-		employee.setName( (String)json.get("name"));
-		employee.setMobile( ((BigInteger)json.get("mobile")).longValue());
+		String status = "successfully added";
+		setUser(employee, json);
 		employee.setBranchId(((BigInteger) json.get("branchId")).intValue());
-		employee.setEmail((String)json.get("email"));
-		employee.setGender(Gender.valueOf((String)json.get("gender")));
-		employee.setCreatedBy( ((BigInteger) json.get("createdBy")).intValue());
-		employee.setCreatedTime(System.currentTimeMillis());
-		employee.setPassword((String) json.get("password"));
-		employee.setModifiedBy(((BigInteger)json.get("createdBy")).intValue());
-		employee.setRole(UserType.valueOf((String) json.get("role")));
+		employee.setRole(UserType.EMPLOYEE);
 		ZBank zbank = new ZBank();
 		try {
 			zbank.addEmployees(employee);
+			
 		} catch (BankingException e) {
 			e.printStackTrace();
+			status = "Customer creation failed";
 		}
+		return status;
+	}
+	public String handleAddCustomer(HttpServletRequest request)  {
+	HashMap<String, Object> json = JSONConverter.getMapFromJson(request);
+	Customer customer = new Customer();
+	String status = "successfully added";
+	setUser(customer, json);
+	
+	customer.setRole(UserType.CUSTOMER);
+	customer.setAadhar(((BigInteger)json.get("aadhar")).longValue());
+	customer.setPan((String )json.get("pan"));
+	customer.setAddress((String) json.get("address"));
+	
+	ZBank zBank = new ZBank();
+	try {
+		zBank.addCustomer(customer);
+		
+	} catch (BankingException e) {
+		status = "Customer creation failed";
+		e.printStackTrace();
+	}
+	return  status;
 	}
 	
+	private void setUser(User user,	HashMap<String, Object> json) {
+		user.setName( (String)json.get("name"));
+		user.setMobile( ((BigInteger)json.get("mobile")).longValue());
+	
+		user.setEmail((String)json.get("email"));
+		user.setGender(Gender.valueOf((String)json.get("gender")));
+		user.setCreatedBy( ((BigInteger) json.get("createdBy")).intValue());
+		user.setCreatedTime(System.currentTimeMillis());
+		user.setPassword((String) json.get("password"));
+		user.setModifiedBy(((BigInteger)json.get("createdBy")).intValue());
+	
+	}
+	
+	public void updateBranch(HttpServletRequest request) {
+		
+	}
 	
 }

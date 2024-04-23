@@ -12,6 +12,7 @@ import com.zbank.enums.TransactionType;
 import com.zbank.enums.UserType;
 import com.zbank.exceptions.BankingException;
 import com.zbank.models.Account;
+import com.zbank.models.ApiData;
 import com.zbank.models.Branch;
 import com.zbank.models.Customer;
 import com.zbank.models.Employee;
@@ -21,6 +22,7 @@ import com.zbank.models.TransactionReq;
 import com.zbank.models.User;
 import com.zbank.persistence.Connector;
 import com.zbank.persistence.DbConnector;
+import com.zbank.utilities.ApiKeyGenerator;
 import com.zbank.utilities.SHAHash;
 import com.zbank.utilities.Validation;
 
@@ -264,5 +266,14 @@ public class ZBank {
    }
    public int getUsersId(long mobile) throws BankingException {
 	   return dbConnector.getUsersId(mobile);
+   }
+   public String setApiData(ApiData api) throws BankingException {
+	   String apiKey = ApiKeyGenerator.generateApiKey(); 
+	   api.setApiKey(SHAHash.getHash(apiKey));
+	   dbConnector.addApi(api);
+	   return apiKey;
+   }
+   public void validateApi(String api) throws BankingException {
+	   dbConnector.validateApi(api);
    }
 }

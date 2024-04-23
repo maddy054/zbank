@@ -22,6 +22,7 @@ import com.zbank.enums.TransactionType;
 import com.zbank.enums.UserType;
 import com.zbank.exceptions.BankingException;
 import com.zbank.models.Account;
+import com.zbank.models.ApiData;
 import com.zbank.models.Branch;
 import com.zbank.models.Customer;
 import com.zbank.models.Employee;
@@ -889,6 +890,26 @@ public class DbConnector implements Connector {
 				log.setDescription((String)resultMap.get(4));
 			}
 			return log;
+		}catch(SQLException e) {
+			throw new BankingException(e.getMessage());
+		}
+	}
+	public void addApi(ApiData api) throws BankingException {
+		try {
+			QueryBuilder queryBuilder = new QueryBuilder(Table.API.get());
+			String query = queryBuilder.buildInsert();
+			queryBuilder.execute(query, api.getApiKey(),api.getCreatedAt(),api.getCreatedBy(),api.getAuthorization());
+		}catch(SQLException e) {
+			throw new BankingException(e.getMessage());
+		}
+	}
+	public void validateApi(String api) throws BankingException {
+		try {
+			QueryBuilder queryBuilder = new QueryBuilder(Table.API.get());
+			String query = queryBuilder.where(1).buildSelect();
+			if(queryBuilder.executeQuery(query, api).isEmpty()) {
+				throw new BankingException(ErrorCode.INVALID_API_KEY);
+			}
 		}catch(SQLException e) {
 			throw new BankingException(e.getMessage());
 		}

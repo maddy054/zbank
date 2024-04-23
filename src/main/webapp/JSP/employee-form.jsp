@@ -5,15 +5,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
+   <script type="text/javascript" src="<%= request.getContextPath() %>/JavaScript/bankApp.js"></script>
 </head>
 <body>
  <% UserType userType = (UserType) request.getSession(false).getAttribute("userType");
  String type = (String) request.getAttribute("type");
  if(type == "customer"){ %>
-        <form name="customer-create" action="create-customer" method="post">
+ 
+ 
+ <form id="form" onsubmit="addEmployee();">
+ 	 <input id="userId" value="123">
+ 	 <button class="btn" >Test</button>	
+ </form>
+ 
+ 
+         <form name="customer-create" action="create-customer" method="post">
         <% }else{ %>
-       	<form name="create-employee" action="create-employee" method="post">
+       	<form name="create-employee" action="create-employee" method="post" >
         <%} %>
 
            <div class="input-container">

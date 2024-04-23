@@ -34,12 +34,22 @@
     
   <filter>
     <filter-name>MyFilter</filter-name>
-    <filter-class>com.zbank.servlet.ServletFilter</filter-class> 
+    <filter-class>com.zbank.filters.ServletFilter</filter-class> 
   </filter>
     
    <filter-mapping>
     <filter-name>MyFilter</filter-name>
     <url-pattern>/service/*</url-pattern>
+   </filter-mapping>
+   
+    <filter>
+    <filter-name>ApiFilter</filter-name>
+    <filter-class>com.zbank.filters.ApiKeyValidator</filter-class> 
+  </filter>
+    
+   <filter-mapping>
+    <filter-name>ApiFilter</filter-name>
+    <url-pattern>/api/*</url-pattern>
    </filter-mapping>
     
 	
