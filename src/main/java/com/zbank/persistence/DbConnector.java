@@ -822,7 +822,7 @@ public class DbConnector implements Connector {
 			
 			return branch;
 		}catch(SQLException e) {
-			throw new  BankingException(e.getMessage());
+			throw new  BankingException(ErrorCode.INVALID_BRANCH);
 		}
 	}
 	

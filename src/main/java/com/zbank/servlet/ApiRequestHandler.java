@@ -7,7 +7,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONObject;
 
+import com.zbank.enums.ErrorCode;
 import com.zbank.enums.Gender;
 import com.zbank.enums.TransactionDetail;
 import com.zbank.enums.TransactionPeriod;
@@ -104,7 +106,11 @@ public class ApiRequestHandler {
     			
     			json = JSONConverter.getJson(branches);
     		}
-    	} catch (NumberFormatException | BankingException e) {
+    	} catch ( BankingException e) {
+    		if(e.getErrorCode() == ErrorCode.INVALID_BRANCH) {
+    			json = JSONConverter.getJson(e);
+    			
+    		}
 			e.printStackTrace();
 	}
     	return json;
@@ -150,7 +156,7 @@ public class ApiRequestHandler {
 		}
 		return status;
 	}
-	public String handleAddCustomer(HttpServletRequest request)  {
+	public Object handleAddCustomer(HttpServletRequest request)  {
 	HashMap<String, Object> json = JSONConverter.getMapFromJson(request);
 	Customer customer = new Customer();
 	String status = "successfully added";
@@ -164,11 +170,15 @@ public class ApiRequestHandler {
 	ZBank zBank = new ZBank();
 	try {
 		zBank.addCustomer(customer);
-		
+		int id = zBank.getUsersId(customer.getMobile());
+		customer = zBank.getCustomerDetails(id);
+		JSONObject jsonObj = new JSONObject(customer);
+		return jsonObj;
 	} catch (BankingException e) {
 		status = "Customer creation failed";
 		e.printStackTrace();
 	}
+	
 	return  status;
 	}
 	

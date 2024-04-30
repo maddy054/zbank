@@ -26,8 +26,9 @@ public class ApiKeyValidator implements Filter {
     public void doFilter(ServletRequest HttpRequest, ServletResponse HttpResponse, FilterChain chain) throws IOException, ServletException {
     	 HttpServletRequest request = (HttpServletRequest) HttpRequest;
          HttpServletResponse response = (HttpServletResponse) HttpResponse;
-
-         String api = request.getParameter("apiKey");
+        
+         String api = request.getHeader("apiKey");
+         System.out.println("api"+api);
          if(api == null) {
         	 PrintWriter out = response.getWriter();
 				out.print("Include Api Key in parameter");

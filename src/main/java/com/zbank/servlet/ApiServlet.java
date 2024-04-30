@@ -56,11 +56,13 @@ public class ApiServlet extends HttpServlet{
         switch (request.getRequestURI()){
         
         case "/zbank/api/createCustomer":
-        	json = handler.handleAddEmployee(request);
+        	Object obj = handler.handleAddCustomer(request);
+        	json = obj.toString();
         	break;
         	
         case "/zbank/api/createEmployee":
-        	json = handler.handleAddCustomer(request);
+        	 obj = handler.handleAddCustomer(request);
+        	json = obj.toString();
         }
         PrintWriter out = response.getWriter();
 		out.print(json);

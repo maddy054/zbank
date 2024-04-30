@@ -25,7 +25,8 @@ public class BankServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestHandler handler = new RequestHandler();
 		try {
-			
+		//System.out.println(request.getRequestURI());
+		
 		
 		switch (request.getRequestURI()){
 		
@@ -317,12 +318,12 @@ public class BankServlet extends HttpServlet {
 				
 				response.sendRedirect("/zbank/service/login");
 				
-			}else if(error == ErrorCode.WRONG_PASSWORD) {
+			}else if(error == ErrorCode.WRONG_PASSWORD)  {
 				
 				request.setAttribute("message","Incorrect Password");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/login.jsp");
 				dispatcher.forward(request, response);		
-				
+				 
 			}else if(error == ErrorCode.INVALID_USER) {
 				request.setAttribute("message", "No such User");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/login.jsp");

@@ -3,6 +3,8 @@ package com.zbank.tester;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.net.ssl.HostnameVerifier;
@@ -19,7 +21,8 @@ public class ApiTester {
 		System.setProperty("javax.net.ssl.trustStorePassword", "Maddy@432");
 		
             URL apiUrl = new URL("https://localhost:8443/zbank/api/branch?apiKey=KN7iRWZ1wgqZWOQvz9pWMM5wWEGYfnNk&branchId=100");
-            
+            List<String> list = Arrays.asList(new String[2]);
+
             connection = (HttpsURLConnection) apiUrl.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");

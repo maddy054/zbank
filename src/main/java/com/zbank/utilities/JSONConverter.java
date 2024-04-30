@@ -12,17 +12,18 @@ import org.apache.tomcat.util.json.ParseException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zbank.exceptions.BankingException;
 
 public class JSONConverter {
 	
-	public static String getJson(Object object) throws BankingException {
+	public static String getJson(Object object) {
 		 ObjectMapper objectMapper = new ObjectMapper();
+		 String json = new String();
 	     try {
 			return objectMapper.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
-			throw new BankingException("error during json processing");
+			e.printStackTrace();
 		}
+		return json;
 	}
 	
 	@SuppressWarnings("unchecked")

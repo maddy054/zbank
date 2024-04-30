@@ -8,11 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Branch Details</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/CSS/navigation.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>    
+    <script type="text/javascript" src="<%= request.getContextPath() %>/JavaScript/BankJQuery.js"></script>
     <link rel="icon" type="image/x-icon" href="<%= request.getContextPath() %>/IMAGE/zbi.png">
     
 </head>
+
 <body>
     <header>
         <div class="logo">
@@ -34,10 +36,12 @@
 			<img src="<%= request.getContextPath() %>/IMAGE/log-out.png" usemap="#logout-map">
         </div>
         <map name="logout-map">
-       <area shape="rect" coords="0,0,100,200" href="logout" alt="logout">
+            <area shape="rect" coords="0,0,100,200" href="logout" alt="logout">
         </map>
     </header>
-      <div class="overall">
+
+
+<div class="overall">
     	
     <div class="main-container">
         
@@ -49,57 +53,48 @@
         </div>
     </div>
     <div class="initial-input">
-     <form class="statement-form" action="search-branch" method="post">
-  
-      
-          <div>
-            <label>Branch Id</label>
-             <input class="input" type="number" name="branchId" placeholder="Enter the Branch Id"></input>
-         </div > 
-         <div class="btn">
+
+   		<div class="statement-form">
+   			<label>Branch Id</label>
+      		<input id="branchId" class="input" type="number" name="branchId" placeholder="Enter the Branch Id"></input>
+    	</div > 
+        <div class="btn" id="search_branch">
             <button type="submit">Search</button>
-         </div>
-    </form>
+        </div>
+        <div  style="display: none;" id="messageDiv" class="status">
+            <p id="message"></p>
+        </div>
+   
+        <div>
     
-    <% Object branchObj = request.getAttribute("branch");
-    
-    if(branchObj != null){
-    Branch branch = (Branch)branchObj;%>
-    
-  
-    <div class="outer-container">
+            <div style="display:none;" id="details" class="outer-container">
        
-            <div class="form-container">
-                <form action="create-branch" method="post">  
-                <div class="singleInput">
-                       <label for="BranchId" class="label">Branch Name</label>
-                       <span class="input"><%= branch.getBranchId() %> </span>
-                    </div>
-                    <div class="singleInput">
-                        <label for="BranchName" class="label" >Branch Name</label>
-                       <span class="input"><%= branch.getBranchName() %></span>
-                    </div>
-                   <div class="singleInput">
-                        <label for="ifscCode" class="label">IFSC code</label>
-                      	<span class="input"><%= branch.getIfsc() %></span>
-                   </div>
-                   <div class="singleInput">
-                        <label for="address" class="label" >Address</label>
-                       	<span class="input"><%= branch.getAddress() %></span>
-                   </div>
+                <div class="form-container">
+                    <form action="create-branch" method="post">  
+                        <div class="singleInput">
+                            <label  class="label">Branch Id</label>
+                            <span id="branchid" class="input"> </span>
+                        </div>
+                        <div class="singleInput">
+                            <label  class="label" >Branch Name</label>
+                            <span  id="branchName" class="input"></span>
+                        </div>
+                        <div class="singleInput">
+                            <label  class="label">IFSC code</label>
+                            <span id="ifscCode" class="input"></span>
+                        </div>
+                        <div class="singleInput">
+                            <label  class="label" >Address</label>
+                            <span id="address" class="input"></span>
+                        </div>
                    
-                </form>
-            </div>
+                     </form>
+                </div>
+   		    </div>
+        </div>
     </div>
-    <%} %>
-    <% Object message = request.getAttribute("message") ;
-        if(message != null){ %>
-         <div class="status">
-                <p> <%=(String) message %></p>
-         </div>
-        <%} %>
-        </div>
-        </div>
+    </div>
 
 </body>
+
 </html>
