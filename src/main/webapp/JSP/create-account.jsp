@@ -67,7 +67,7 @@
                     <option > FIXED_DEPOSIT</option>
                     
                 </select>
-                <div class="btn">
+                <div class="btn">name
                     <button type="submit">create Account</button>
                 </div>
                

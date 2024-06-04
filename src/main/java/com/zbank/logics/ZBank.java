@@ -4,6 +4,7 @@ package com.zbank.logics;
 import java.util.List;
 import java.util.Map;
 
+import com.zbank.cache.CachePool;
 import com.zbank.enums.ErrorCode;
 import com.zbank.enums.Status;
 import com.zbank.enums.TransactionDescription;
@@ -68,17 +69,18 @@ public class ZBank {
 	public int getBranchId(int userId) throws BankingException {
 		 return dbConnector.getBranchId(userId);
 	}
-	public void addCustomer(Customer customer) throws BankingException {
+	public int addCustomer(Customer customer) throws BankingException {
 		
 		 String password =  SHAHash.getHash(customer.getPassword());
 		customer.setPassword(password);
-		dbConnector.addCustomer(customer);
+	  return 	dbConnector.addCustomer(customer);
 	}
 	
 	public void addAccount(Account account) throws BankingException{
 
 		dbConnector.addAccount(account);
 	}
+	
 	public void changePassword(int userId,String oldPassword,String newPassword) throws BankingException {
 		checkPassword(userId, oldPassword);
 		
@@ -177,11 +179,14 @@ public class ZBank {
 	}
 	
 	public  Customer getCustomerDetails(int userId) throws BankingException {
-		return dbConnector.getCustomerDetails(userId);
+		
+	return	CachePool.getCustomerCache().getValue(userId);
+		//return dbConnector.getCustomer(userId);
 	}
 	
 	public Employee getEmployeeDetails(int userId) throws BankingException {
-		return dbConnector.getEmployeeDetails(userId);
+		return CachePool.getEmployeeCache().getValue(userId);
+		//return dbConnector.getEmployeeDetails(userId);
 	}
 	
 	public User getAdminDetail(int userId) throws BankingException {

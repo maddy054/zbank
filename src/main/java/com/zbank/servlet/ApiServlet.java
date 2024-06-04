@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zbank.enums.UserType;
+import com.zbank.exceptions.BankingException;
+import com.zbank.servlethandler.ApiRequestHandler;
+
 
 public class ApiServlet extends HttpServlet{
 
@@ -16,9 +20,21 @@ public class ApiServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)   throws ServletException, IOException {
     	
+    
+    	System.err.println("Get");
     	ApiRequestHandler handler = new ApiRequestHandler();
+    	
         response.setContentType("application/json");
-        
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, APIKEY");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        	response.setStatus(HttpServletResponse.SC_OK);
+			return;
+        }
+      
+        System.out.println("url "+request.getRequestURI());
         String json = new String();
         switch (request.getRequestURI()){
         
@@ -41,14 +57,32 @@ public class ApiServlet extends HttpServlet{
         	json = handler.handleGetStatement(request);
         	
         	break;
+        	
+        case"/zbank/api/count":
+        	json = handler.getPageCount(request);	
+        	break;
+        		
         }
         
         PrintWriter out = response.getWriter();
 		out.print(json);
-        out.flush();
+        out.flush();		
     }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	
+    	System.err.println("post");
+        response.setContentType("application/json");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, APIKEY");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        	response.setStatus(HttpServletResponse.SC_OK);
+			return;
+        }
+        	
     	ApiRequestHandler handler = new ApiRequestHandler();
         response.setContentType("application/json");
         
@@ -56,11 +90,53 @@ public class ApiServlet extends HttpServlet{
         switch (request.getRequestURI()){
         
         case "/zbank/api/createCustomer":
-        	json = handler.handleAddEmployee(request);
+        	try {
+				json = handler.handleAddCustomer(request);
+			} catch (BankingException e) {
+				
+				e.printStackTrace();
+			}
         	break;
         	
         case "/zbank/api/createEmployee":
-        	json = handler.handleAddCustomer(request);
+        	json = handler.handleAddEmployee(request);
+        	break;
+        case "/zbank/api/createBranch":
+       
+        	try {
+				json = 	handler.addBranch(request);
+			} catch (BankingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	break;
+        	
+        case "/zbank/api/userDeactivate":
+        	try {
+        		json = handler.handleDeactivateEmployee(request);
+        		System.out.println(json);
+        	}catch (BankingException e) {
+				
+			}
+        	break;
+        	
+        case "/zbank/api/editCustomer":
+        	try {
+				json = handler.handleUserEdit(request,UserType.CUSTOMER);
+			
+			} catch (BankingException e) {
+		
+				e.printStackTrace();
+			}
+        	break;
+        	
+        case "/zbank/api/editEmployee":
+        	try {
+				json = handler.handleUserEdit(request,UserType.EMPLOYEE);
+			} catch (BankingException e) {
+				e.printStackTrace();
+			}
+        	break;
         }
         PrintWriter out = response.getWriter();
 		out.print(json);
@@ -68,6 +144,17 @@ public class ApiServlet extends HttpServlet{
     }
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	System.err.println("Put");
+    	 response.setContentType("application/json");
+         response.setHeader("Access-Control-Allow-Origin", "*");
+         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+         response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, APIKEY");
+
+         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+         	response.setStatus(HttpServletResponse.SC_OK);
+ 			return;
+         }
+         
     	ApiRequestHandler handler = new ApiRequestHandler();
         response.setContentType("application/json");
         
@@ -77,7 +164,7 @@ public class ApiServlet extends HttpServlet{
         case "/zbank/api/customer":
         	json = handler.handleAddEmployee(request);
         	break;
-        	
+      
         }
         PrintWriter out = response.getWriter();
 		out.print(json);

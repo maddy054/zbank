@@ -17,7 +17,7 @@ public class QueryBuilder {
 	private String url = "jdbc:mysql://localhost:3306/ZBank";
 	private String userName = "root";
 	private String password = "";
-	 String driverClassName = "com.mysql.cj.jdbc.Driver";
+	String driverClassName = "com.mysql.cj.jdbc.Driver";
 	 
     private String tableName;
     private List<Integer> usedColumns;
@@ -32,6 +32,7 @@ public class QueryBuilder {
     	try {
 			Class.forName(driverClassName);
 		} catch (ClassNotFoundException e) {
+			
 			e.printStackTrace();
 		}
 		return DriverManager.getConnection(url, userName, password);
@@ -235,6 +236,7 @@ public class QueryBuilder {
 		  List<Map<Integer,Object>> resultList = new ArrayList<>();
 		 
 	    	try (Connection connection = getConnection()) {
+	    		
 	    		PreparedStatement statement = connection.prepareStatement(query);
 	    		setValues(statement, values);
 	    			
@@ -260,9 +262,12 @@ public class QueryBuilder {
 		}
 	
 	public void execute(String query, Object...values ) throws SQLException {
+		
 		try (Connection connection = getConnection()) {
     		PreparedStatement statement = connection.prepareStatement(query);
+    		
     		setValues(statement, values);
+    		
     		statement.execute();
 		}
 	}

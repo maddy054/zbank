@@ -20,7 +20,7 @@ public class Validation {
 			throw new BankingException(ErrorCode.INVALID_PATTERN);
 		}
 	}
-	public static boolean isValidNumber(String number) {
+	public static boolean isValidPhoneNumber(String number) {
 		Pattern pattern = getPattern("^[7-9]\\d{9}$");
 		Matcher match = getMatcher(pattern,number);
 		return match.matches();
@@ -65,4 +65,9 @@ public class Validation {
 				
 			}
 		}
+		public static boolean isNumber(String number) {
+			Pattern pattern = Pattern.compile("^d{5}$");
+			Matcher matcher = pattern.matcher(number);
+			return matcher.matches();		
+		 }
 }

@@ -28,7 +28,7 @@ public interface Connector {
 	
 	public void addBranch(Branch branch) throws BankingException;
 	
-	public void addCustomer(Customer customer) throws BankingException;
+	public int addCustomer(Customer customer) throws BankingException;
 	
 	public void addAccount(Account account) throws BankingException  ;
 	
@@ -42,7 +42,7 @@ public interface Connector {
 	
 	public Map<Integer,Branch> getAllBranches(int limit,long offset)  throws BankingException;
 	
-	public Customer getCustomerDetails(int userId) throws BankingException;
+	public Customer getCustomer(Integer userId) throws BankingException;
 	
 	public  Map<Long,Account> getAccountDetails(int userId) throws BankingException;
 	
@@ -64,10 +64,9 @@ public interface Connector {
 
 	public long getOverAllbalance(int userId) throws BankingException;
 
-	public Employee getEmployeeDetails(int userId) throws BankingException;
+	public Employee getEmployee(Integer userId) throws BankingException;
 
 	public int getBranchId(int userId) throws BankingException; 
-
 	
 	public List<Customer> getAllCustomer(int limit,long offset) throws  BankingException ;
 	
@@ -104,5 +103,6 @@ public interface Connector {
 	public void addApi(ApiData api) throws BankingException ;
 	
 	public void validateApi(String api) throws BankingException;
+	
 }
 

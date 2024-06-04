@@ -95,11 +95,11 @@
     <% Object message = request.getAttribute("message") ;
         if(message != null){ %>
          <div class="status">
-                <p> <%=(String) message %></p>
+         		 <p> <%=(String) message %></p>
          </div>
         <%} %>
-        </div>
-        </div>
+      </div>
+   </div>
 
 </body>
 </html>

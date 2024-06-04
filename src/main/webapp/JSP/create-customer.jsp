@@ -60,25 +60,30 @@
     <div class="main-container">
         <div class="selection"> 
         
-        <% 
-        if(type == "customer"){%>
-        <a class="other-detail" href="search-customer">Search Customer</a>
+        <%if(type == "customer"){%>
+            <a class="other-detail" href="search-customer">Search Customer</a>
             <a class="other-detail" href="customer-detail">All customers</a>
             <a class="this-detail" >New Customer</a>
             <a class="other-detail" href="deactivate-customer">Deactivate Customer</a>
-            <%}else{ %>
+        <%}else{ %>
             <a class="other-detail" href="search-employee">Search Employee</a>
-            
-             <a class="other-detail" href="employee-details">All Employee</a>
+            <a class="other-detail" href="employee-details">All Employee</a>
             <a class="this-detail" >New Employee</a>
             <a class="other-detail" href="deactivate-employee">Deactivate Employee</a>
-            <%} %>
+        <%} %>
         </div>
     </div>
+   
     <div class="initial-input">
-    <jsp:include page="employee-form.jsp"></jsp:include>
+      <% Object message = request.getAttribute("message") ;
+      if(message != null){ %>
+     <div class="status">
+       <p> <%=(String) message %></p>
     </div>
+    <%} %>
+        <jsp:include page="employee-form.jsp"></jsp:include>
     </div>
+</div>
 
    
 </body>

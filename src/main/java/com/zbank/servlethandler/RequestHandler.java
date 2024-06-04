@@ -1,10 +1,10 @@
-package com.zbank.servlet;
+package com.zbank.servlethandler;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -31,10 +31,12 @@ import com.zbank.models.OperationLog;
 import com.zbank.models.Transaction;
 import com.zbank.models.TransactionReq;
 import com.zbank.models.User;
-
+import com.zbank.servlet.LogExecutor;
+				
 public class RequestHandler {
-	ExecutorService service = Executors.newFixedThreadPool(5);	
 	int limit = 15;
+	Logger logger =  Logger.getLogger(RequestHandler.class.getName());
+	
 	public void doTransaction(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
 		
@@ -72,7 +74,7 @@ public class RequestHandler {
 				request.setAttribute("status", "Transaction Successful");
 			} catch (BankingException e) {
 				request.setAttribute("status", "Transaction Failed");
-				e.printStackTrace();
+				logger.log(Level.WARNING,e.getStackTrace().toString());
 			}finally {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/transaction.jsp");
 				dispatcher.forward(request, response);	
@@ -81,13 +83,13 @@ public class RequestHandler {
 		
 	}
 	
-	public void createCustomer(HttpServletRequest request,HttpServletResponse response) {
+	public void createCustomer(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 	
 	if(request.getParameter("name") != null) {
 		
 		ZBank zbank = new ZBank();
 		Customer customer = new Customer();
-		
+		String message = "customer created succesfully";
 		customer.setName(request.getParameter("name"));
 		long mobile = Long.parseLong( request.getParameter("mobile"));
 		customer.setMobile(mobile);
@@ -108,10 +110,14 @@ public class RequestHandler {
 			zbank.addCustomer(customer);
 			LogExecutor logExecutor = new LogExecutor();
 			logExecutor.updateLog(getLog(request, zbank.getUsersId(mobile), "Customer created"));
-
+			
+			
 		} catch (BankingException e) {
-		
+			message = "Customer Creation Failed";
 			e.printStackTrace();
+		}finally {
+			request.setAttribute("message", message);
+		    request.getRequestDispatcher("/JSP/create-customer.jsp").forward(request, response);
 		}
 	}
 	
@@ -120,6 +126,7 @@ public class RequestHandler {
 	public void deactivateCustomer(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
 		ZBank zbank = new ZBank();
+		String message = "Customer Deactivated Successfully";
 		if(request.getParameter("userId") != null) {
 			
 			int userId =Integer.parseInt(request.getParameter("userId"));
@@ -128,11 +135,15 @@ public class RequestHandler {
 				zbank.userDeactivate(userId, Status.INACTIVE);
 				LogExecutor logExecutor = new LogExecutor();
 				logExecutor.updateLog(getLog(request, userId, "Customer deactivated"));
+				
+				
+			} catch (BankingException e) {
+				message = "Customer Deactivation failed";
+				e.printStackTrace();
+			}finally {
+				request.setAttribute("message", message);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/deactivate-customer.jsp");
 				dispatcher.forward(request, response);
-			} catch (BankingException e) {
-				
-				e.printStackTrace();
 			}
 		}
 		
@@ -163,7 +174,7 @@ public class RequestHandler {
 	
 	public void getProfile(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException, BankingException {
 		
-		UserType user =  (UserType) request.getSession().getAttribute("userType");
+		UserType user =  (UserType) request.getSession(false).getAttribute("userType");
 		ZBank zbank = new ZBank();
 		
 		int userId = (int) request.getSession().getAttribute("userId");
@@ -207,27 +218,35 @@ public class RequestHandler {
 	
 
 	
-	public void createAccount(HttpServletRequest request,HttpServletResponse response) throws BankingException, ServletException, IOException {
+	public void createAccount(HttpServletRequest request,HttpServletResponse response) throws  ServletException, IOException {
 		
 		ZBank zbank = new ZBank();
 		int userId = (int) request.getSession(false).getAttribute("userId");
-		int branchId = zbank.getBranchId(userId);
-		
-	Account account = new Account();
-	
-	account.setUserId( Integer.parseInt( request.getParameter("userId")));
-	account.setBranchId(branchId);
-	account.setAccountType(AccountType.valueOf(request.getParameter("type")));
-	account.setCreatedTime(System.currentTimeMillis());
-	account.setModifiedBy((int)request.getSession().getAttribute("userId"));
-	
-	zbank.addAccount(account);
-	
-	LogExecutor logExecutor = new LogExecutor();
-	logExecutor.updateLog(getLog(request, userId, "Account created"));
-	
-	RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/create-account.jsp");
-	dispatcher.forward(request, response);
+		String message = "Account Created Successfully";
+		try {
+			int branchId = zbank.getBranchId(userId);
+			
+			Account account = new Account();
+			
+			account.setUserId( Integer.parseInt( request.getParameter("userId")));
+			account.setBranchId(branchId);
+			account.setAccountType(AccountType.valueOf(request.getParameter("type")));
+			account.setCreatedTime(System.currentTimeMillis());
+			account.setModifiedBy((int)request.getSession().getAttribute("userId"));
+			
+			zbank.addAccount(account);
+			
+			LogExecutor logExecutor = new LogExecutor();
+			
+			logExecutor.updateLog(getLog(request, userId, "Account created"));
+		}catch(BankingException e) {
+			message ="Account Creation Failed";
+			e.printStackTrace();
+		}finally {
+			request.setAttribute("message", message);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/create-account.jsp");
+			dispatcher.forward(request, response);
+		}
 	
 	}
 	
@@ -370,7 +389,7 @@ public class RequestHandler {
 	   
 	   public void createEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		   ZBank zbank = new ZBank();
-		   
+		   String message = "Employee Created Successfully";
 		   
 		   
 		   Employee employee = new Employee();
@@ -387,14 +406,19 @@ public class RequestHandler {
 			employee.setModifiedBy((int)request.getSession().getAttribute("userId"));
 			request.setAttribute("type", "employee");
 			
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/create-customer.jsp");
-			dispatcher.forward(request, response);
+			
 			try {
 				zbank.addEmployees(employee);
 				LogExecutor logExecutor = new LogExecutor();
 				logExecutor.updateLog(getLog(request, zbank.getUsersId(mobile), "Employee created"));
 			}catch(BankingException e) {
+				message = "Customer Creation Failed";
 				e.printStackTrace();
+			}finally {
+				request.setAttribute("message", message);
+				
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/create-customer.jsp");
+				dispatcher.forward(request, response);
 			}
 		   
 		   
@@ -403,6 +427,8 @@ public class RequestHandler {
 		   ZBank zbank = new ZBank();
 		   Branch branch = new Branch();
 		   String branchName = request.getParameter("branchName");
+		   
+		   String message = "Branch created successfully";
 		   branch.setBranchName(branchName);
 		   branch.setIfsc(Long.parseLong( request.getParameter("ifsc")));
 		   
@@ -418,11 +444,12 @@ public class RequestHandler {
 		   
 		   try {
 		   zbank.addBranch(branch);
-		   request.setAttribute("message", "Branch created successfully");
+		 
 		   }catch (BankingException e) {
-			   request.setAttribute("message", "Branch creation failed");
+			 message="Branch Creation Failed";
 			e.printStackTrace();
 		}finally {
+			  request.setAttribute("message",message);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/create-branch.jsp");
 			dispatcher.forward(request, response);
 		}
@@ -450,6 +477,7 @@ public class RequestHandler {
 		   }
 		   return pages;
 	   }
+	   
 	   public void handleChangePass(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		   String oldPass = request.getParameter("oldPass");
 		   String newPass = request.getParameter("newPass");
@@ -619,7 +647,6 @@ public class RequestHandler {
 	   public void handleEditEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		   ZBank zbank = new ZBank();
 		   try {
-			   
 			   
 			   int userId =Integer.parseInt(request.getParameter("userId"));
 			   Employee employee = zbank.getEmployeeDetails(userId);

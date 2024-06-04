@@ -7,18 +7,34 @@
 	 <welcome-file-list>
 		 <welcome-file>index.jsp</welcome-file>
 	 </welcome-file-list>
-	 
+<!--    <filter>
+    	<filter-name>MyFilter</filter-name>
+    	<filter-class>com.zbank.filters.ServletFilter</filter-class> 
+  </filter> -->
+    
+
+   
+<!--     <filter>
+   		<filter-name>ApiFilter</filter-name>
+   	 	<filter-class>com.zbank.filters.ApiKeyValidator</filter-class> 
+  </filter>
+     -->
+ <!--   <filter-mapping>
+    	<filter-name>ApiFilter</filter-name>
+    	<url-pattern>/api/*</url-pattern>
+   </filter-mapping> -->
     <servlet>
-        <servlet-name>BankServlet</servlet-name>
+        <servlet-name>BankServlet</servlet-name>	
         <servlet-class>com.zbank.servlet.BankServlet</servlet-class>
     </servlet>
     
   
-  <servlet-mapping>
+  <servlet-mapping>	
         <servlet-name>BankServlet</servlet-name>
         <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
     
+    	
       <servlet>
    		 <servlet-name>ApiServlet</servlet-name>
     	 <servlet-class>com.zbank.servlet.ApiServlet</servlet-class>
@@ -31,26 +47,5 @@
     	<url-pattern>/api/*</url-pattern>
     </servlet-mapping>
     
-    
-  <filter>
-    <filter-name>MyFilter</filter-name>
-    <filter-class>com.zbank.filters.ServletFilter</filter-class> 
-  </filter>
-    
-   <filter-mapping>
-    <filter-name>MyFilter</filter-name>
-    <url-pattern>/service/*</url-pattern>
-   </filter-mapping>
-   
-    <filter>
-    <filter-name>ApiFilter</filter-name>
-    <filter-class>com.zbank.filters.ApiKeyValidator</filter-class> 
-  </filter>
-    
-   <filter-mapping>
-    <filter-name>ApiFilter</filter-name>
-    <url-pattern>/api/*</url-pattern>
-   </filter-mapping>
-    
-	
+  
 </web-app>

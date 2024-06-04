@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.json.JSONParser;
@@ -12,17 +13,20 @@ import org.apache.tomcat.util.json.ParseException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zbank.exceptions.BankingException;
+
 
 public class JSONConverter {
 	
-	public static String getJson(Object object) throws BankingException {
+	
+	public static String getJson(Object object) {
 		 ObjectMapper objectMapper = new ObjectMapper();
+		 String json = "";
 	     try {
-			return objectMapper.writeValueAsString(object);
+			json = objectMapper.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
-			throw new BankingException("error during json processing");
+			
 		}
+	     return json;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -42,7 +46,7 @@ public class JSONConverter {
 		        String requestBody = stringBuilder.toString();
 		        JSONParser parser = new JSONParser(requestBody);  
 		        json = (HashMap<String, Object>) parser.parse(); 
-		        System.out.println("Received JSON data: " + json.get("userId"));
+		      
 			} catch (IOException e) {
 				
 				e.printStackTrace();

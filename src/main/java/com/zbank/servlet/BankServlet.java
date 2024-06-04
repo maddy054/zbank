@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zbank.enums.ErrorCode;
 import com.zbank.exceptions.BankingException;
-import com.zbank.utilities.ApiKeyGenerator;
+import com.zbank.servlethandler.RequestHandler;
 
 import javax.servlet.RequestDispatcher;
 
@@ -21,9 +21,10 @@ public class BankServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     Logger logger = Logger.getLogger(BankServlet.class.getName());
-
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestHandler handler = new RequestHandler();
+		System.out.println(request.getSession());
 		try {
 			
 		
@@ -31,7 +32,7 @@ public class BankServlet extends HttpServlet {
 		
 		case "/zbank/service/login":
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/JSP/login.jsp");
-			dispatcher.forward(request, response);		
+			dispatcher.forward(request,response);		
 			break;
 			 
 		case "/zbank/service/dashboard":
@@ -122,7 +123,9 @@ public class BankServlet extends HttpServlet {
 		case "/zbank/service/logout":
 			
 	        request.getSession(false).invalidate();
-	        System.out.println(request.getSession(false));
+	        request.getSession(true);
+	         
+
 			response.sendRedirect("/zbank/service/login");
 			break;
 			
@@ -177,16 +180,16 @@ public class BankServlet extends HttpServlet {
 			break;
 			
 		case "/zbank/service/search-employee":
-			System.out.println(ApiKeyGenerator.generateApiKey());
 			request.setAttribute("type", "employee");
 	
 			request.getRequestDispatcher("/JSP/search-customer.jsp").forward(request, response);
 			break;
 			
 		case "/zbank/service/search-branch":
-			
-		
 			request.getRequestDispatcher("/JSP/search-branch.jsp").forward(request, response);
+			break;							
+		default:
+			response.sendRedirect("/zbank/service/profile");	
 			break;
 		}
 	
@@ -232,11 +235,9 @@ public class BankServlet extends HttpServlet {
 		break;
 		
 	   case "/zbank/service/create-customer":
-		   handler.createCustomer(request, response);
-			dispatcher = request.getRequestDispatcher("/JSP/create-customer.jsp");
-			dispatcher.forward(request, response);
-			
+		   handler.createCustomer(request, response);			
 			break;
+			
 	   case "/zbank/service/create-account":
 		   handler.createAccount(request,response);
 			break;

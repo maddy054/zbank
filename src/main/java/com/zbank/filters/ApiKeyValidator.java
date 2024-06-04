@@ -26,11 +26,12 @@ public class ApiKeyValidator implements Filter {
     public void doFilter(ServletRequest HttpRequest, ServletResponse HttpResponse, FilterChain chain) throws IOException, ServletException {
     	 HttpServletRequest request = (HttpServletRequest) HttpRequest;
          HttpServletResponse response = (HttpServletResponse) HttpResponse;
-
-         String api = request.getParameter("apiKey");
+         System.out.println("api url "+request.getRequestURI());
+         String api = request.getHeader("apiKey");
+         System.out.println("api "+api);
          if(api == null) {
         	 PrintWriter out = response.getWriter();
-				out.print("Include Api Key in parameter");
+				out.print("Include Api Key in header");
 		        out.flush();
 		        return;
          }
@@ -38,6 +39,7 @@ public class ApiKeyValidator implements Filter {
         	 ZBank zbank = new ZBank();
         	 try {
 				zbank.validateApi(api);
+				
 			} catch (BankingException e) {
 				if(e.getErrorCode() == ErrorCode.INVALID_API_KEY) {
 					 	PrintWriter out = response.getWriter();

@@ -41,12 +41,12 @@
             
            <%  } else if(userType == UserType.CUSTOMER){ %>
            
-           <a class="other-nav" href="accounts">Accounts</a>
+          	 <a class="other-nav" href="accounts">Accounts</a>
              <a class="this-nav">Transaction</a>
-            <a class="other-nav" href="statement">Statement</a>
-            <a class="other-nav" href="profile">Profile</a>
-            
+             <a class="other-nav" href="statement">Statement</a>
+             <a class="other-nav" href="profile">Profile</a>
             <% } %>
+            
         </nav>
         </div>
          <map name="logo">

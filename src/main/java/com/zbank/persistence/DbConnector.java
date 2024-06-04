@@ -77,17 +77,19 @@ public class DbConnector implements Connector {
 		}
 	}
 	
-	public void addCustomer(Customer customer) throws BankingException {
+	public int addCustomer(Customer customer) throws BankingException {
 		addUser(customer);
 		
 		try {
 			QueryBuilder queryBuilder = new QueryBuilder(Table.CUSTOMER.get());
 			String query =  queryBuilder.buildInsert();
-			queryBuilder.execute(query, getUsersId(customer.getMobile()),customer.getAadhar(),customer.getPan(),customer.getAddress());
-			
+			int userId = getUsersId(customer.getMobile());
+			queryBuilder.execute(query, userId,customer.getAadhar(),customer.getPan(),customer.getAddress());
+			return userId;
 		} catch (SQLException e) {
 			throw new BankingException(e.getMessage(), e);
 		}
+
 	}
 
 	public int getBranchId(int userId) throws BankingException{
@@ -255,7 +257,7 @@ public class DbConnector implements Connector {
 		
 	}
 
-	public Customer getCustomerDetails(int userId) throws BankingException {
+	public Customer getCustomer(Integer userId) throws BankingException {
 
 		Customer customer = new Customer();
 		
@@ -287,7 +289,7 @@ public class DbConnector implements Connector {
 		
 	}
 
-	public Employee getEmployeeDetails(int userId) throws BankingException{
+	public Employee getEmployee(Integer userId) throws BankingException{
 		Employee employee = new Employee();
 		
 		
@@ -463,6 +465,9 @@ public class DbConnector implements Connector {
 		try {
 			QueryBuilder queryBuilder = new QueryBuilder(Table.USER.get());
 			String query =  queryBuilder.column(8).where(1).buildUpdate();
+			System.out.println("status"+status);
+			System.out.println("status ordinal"+status.ordinal());
+			System.out.println("userId"+userId);
 			queryBuilder.execute(query, status.ordinal(),userId);
 
 		} catch (SQLException e) {
@@ -830,6 +835,7 @@ public class DbConnector implements Connector {
 		try {
 				QueryBuilder  queryBuilder = new QueryBuilder(Table.CUSTOMER.get());
 				String query = queryBuilder.column(2,3,4).where(1).buildUpdate();
+				
 				queryBuilder.execute(query,customer.getAadhar(),customer.getPan(),customer.getAddress(),customer.getUserId());
 				updateUser(customer);
 		}catch(SQLException e) {
@@ -840,6 +846,7 @@ public class DbConnector implements Connector {
 		try {
 			QueryBuilder queryBuilder = new  QueryBuilder(Table.USER.get());
 			String query = queryBuilder.column(3,4,5,6,7,11).where(1).buildUpdate();
+			System.out.println("db "+user.getAge());
 			queryBuilder.execute(query, user.getName(),user.getMobile(),user.getEmail(),user.getAge(),user.getGender().ordinal(),user.getModifiedTime(),user.getUserId());
 			
 		}catch(SQLException e) {
@@ -906,7 +913,9 @@ public class DbConnector implements Connector {
 	public void validateApi(String api) throws BankingException {
 		try {
 			QueryBuilder queryBuilder = new QueryBuilder(Table.API.get());
+			
 			String query = queryBuilder.where(1).buildSelect();
+			
 			if(queryBuilder.executeQuery(query, api).isEmpty()) {
 				throw new BankingException(ErrorCode.INVALID_API_KEY);
 			}
