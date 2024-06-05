@@ -461,13 +461,10 @@ public class DbConnector implements Connector {
 		}
 	}
 	
-	public void setUserStatus(int userId, Status status) throws BankingException{
+	public void updateUserStatus(int userId, Status status) throws BankingException{
 		try {
 			QueryBuilder queryBuilder = new QueryBuilder(Table.USER.get());
 			String query =  queryBuilder.column(8).where(1).buildUpdate();
-			System.out.println("status"+status);
-			System.out.println("status ordinal"+status.ordinal());
-			System.out.println("userId"+userId);
 			queryBuilder.execute(query, status.ordinal(),userId);
 
 		} catch (SQLException e) {
@@ -846,7 +843,7 @@ public class DbConnector implements Connector {
 		try {
 			QueryBuilder queryBuilder = new  QueryBuilder(Table.USER.get());
 			String query = queryBuilder.column(3,4,5,6,7,11).where(1).buildUpdate();
-			System.out.println("db "+user.getAge());
+			System.out.println("update persis userId"+user.getUserId());
 			queryBuilder.execute(query, user.getName(),user.getMobile(),user.getEmail(),user.getAge(),user.getGender().ordinal(),user.getModifiedTime(),user.getUserId());
 			
 		}catch(SQLException e) {
@@ -922,5 +919,11 @@ public class DbConnector implements Connector {
 		}catch(SQLException e) {
 			throw new BankingException(e.getMessage());
 		}
+	}
+
+	@Override
+	public void updateEmployee(Employee employee) throws BankingException {
+		updateUser(employee);
+		
 	}
 }

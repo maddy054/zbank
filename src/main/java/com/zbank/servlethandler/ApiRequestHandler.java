@@ -28,7 +28,7 @@ import com.zbank.utilities.JSONConverter;
 
 public class ApiRequestHandler {
 	
-	private long limit =13;
+	private long limit =15;
 	public String handleGetCustomer(HttpServletRequest request) {
 		
 		
@@ -42,7 +42,7 @@ public class ApiRequestHandler {
     		}else {
     			
     			int pageNo = Integer.parseInt(request.getParameter("pageno"));
-    			List<Customer> allCustomer = zbank.getAllCustomer(13, getOffset(pageNo-1));
+    			List<Customer> allCustomer = zbank.getAllCustomer(15, getOffset(pageNo-1));
     			json = JSONConverter.getJson(allCustomer);
     		}
     		
@@ -260,7 +260,7 @@ public class ApiRequestHandler {
 		
 	}
 	
-	public String handleUserEdit(HttpServletRequest request,UserType user) throws BankingException {
+	public String handleUserEdit(HttpServletRequest request,UserType userType) throws BankingException {
 		HashMap<String, Object> json = JSONConverter.getMapFromJson(request);
 		int userId = Integer.parseInt( json.get("userId").toString());
 
@@ -268,21 +268,22 @@ public class ApiRequestHandler {
 		responseMessage.setUserId(userId);
 		responseMessage.setStatus(TransactionStatus.SUCCESS);
 		responseMessage.setMessage("Details Updated Successfully");
-		
-		Customer customer = new Customer();
-		customer.setUserId(userId);
-		setUser(customer, json);	
-		if(user == UserType.CUSTOMER) {
-			setCustomer(customer,json);
-		}else {
-			
-		}
-		
-		
 		ZBank zBank = new ZBank();
 		try {
-			zBank.updateCustomer(customer);
+		if(userType == UserType.CUSTOMER) {
+			Customer customer = new Customer();
+			customer.setUserId(userId);
+			setUser(customer, json);	
+			setCustomer(customer,json);
 			
+			zBank.updateCustomer(customer);
+		}else {
+			Employee employee = new Employee();	
+			employee.setUserId(userId);
+			setUser(employee, json);
+			zBank.updateEmployee(employee);
+		}
+		
 		} catch (BankingException e) {
 			responseMessage.setStatus(TransactionStatus.FAILED);
 			responseMessage.setMessage("Failed to Update !! Try Again");

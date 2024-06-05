@@ -6,6 +6,9 @@ import java.util.LinkedList;
 
 import com.zbank.exceptions.BankingException;
 import com.zbank.models.CacheType;
+import com.zbank.models.Customer;
+import com.zbank.models.Employee;
+import com.zbank.models.User;
 import com.zbank.persistence.Connector;
 import com.zbank.persistence.DbConnector;
 
@@ -49,6 +52,8 @@ public class LruCache<K,V> implements  Cache<K, V>{
 		
 			
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -68,5 +73,39 @@ public class LruCache<K,V> implements  Cache<K, V>{
 		keyList.clear();
 		
 	}
+	
+	public void updateInDB(K key,V value)  throws BankingException{
+		try {
+
+			if((value.getClass().equals(Customer.class) ||value.getClass().equals(Employee.class) )&& ((User) value).getUserId() == 0){
+				dbConnector.updateUserStatus((int)key,((User)value).getStatus());
+			}else {
+				 dbConnector.getClass().getDeclaredMethod("update"+type.get(), value.getClass()).invoke( dbConnector, value);
+			}	
+					
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
+			e.printStackTrace();
+			throw new BankingException(e.getMessage());
+		}
+		
+		
+	}
+
+	@Override
+	public void update(K key, V value) throws BankingException {
+		
+		updateInDB(key, value);
+		
+		if(keyList.contains(key)) {
+			dataMap.remove(key);
+			dataMap.put(key, fetchData(key));
+		}
+		
+	}
+
+
+	
+	
 
 }

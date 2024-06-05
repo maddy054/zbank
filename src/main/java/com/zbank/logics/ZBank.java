@@ -171,7 +171,17 @@ public class ZBank {
 	}
 	
 	public void userDeactivate(int userId,Status status) throws BankingException {
-		dbConnector.setUserStatus(userId, status);
+		
+		if(getUser(userId) == UserType.CUSTOMER) {
+		Customer customer = new Customer();
+		customer.setStatus(status);
+		CachePool.getCustomerCache().update(userId, customer);
+		}else {
+			Employee employee = new Employee();
+			employee.setStatus(status);
+			CachePool.getEmployeeCache().update(userId, employee);
+		}
+	//		dbConnector.updateUserStatus(userId, status);
 	}
 	
 	public Map<Integer, Branch> getAllBranch(int limit,long offset) throws BankingException {
@@ -255,10 +265,12 @@ public class ZBank {
 	   return dbConnector.getBranch(branchId);
    }
    public void updateCustomer(Customer customer) throws BankingException {
-	   dbConnector.updateCustomer(customer);
+	   CachePool.getCustomerCache().update(customer.getUserId(), customer);
+	  // dbConnector.updateCustomer(customer);
    }
    public void updateEmployee(Employee employee) throws BankingException {
-	   dbConnector.updateUser(employee);
+	   CachePool.getEmployeeCache().update(employee.getUserId(), employee);
+	//   dbConnector.updateUser(employee);
    }
    public void updateLog(OperationLog log) throws BankingException {
 	   dbConnector.updateLog(log);

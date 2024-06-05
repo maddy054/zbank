@@ -4,7 +4,8 @@ public enum CacheType {
 	CUSTOMER("Customer"),
 	BRANCH("Branch"),
 	ACCOUNT("Account"),
-	EMPLOYEE("Employee");
+	EMPLOYEE("Employee"),
+	STATUS("UserStatus");
 
 	private CacheType(String value) {
 		this.value = value;

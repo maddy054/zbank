@@ -58,7 +58,7 @@ public interface Connector {
 	
 	public void getUser(User user, int userId) throws BankingException ;
 	
-	public void setUserStatus(int userId, Status status) throws BankingException;
+	public void updateUserStatus(int userId, Status status) throws BankingException;
 	
 	public void verifyAccount(int userId,long accountNumber) throws BankingException ;
 
@@ -91,6 +91,8 @@ public interface Connector {
 	public void updateCustomer(Customer customer) throws BankingException;
 	
 	public void updateUser(User user) throws BankingException ;
+	
+	public void updateEmployee(Employee employee) throws BankingException;
 	
 	public void updateLog(OperationLog log) throws BankingException;
 	

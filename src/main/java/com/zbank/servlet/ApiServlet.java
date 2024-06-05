@@ -20,8 +20,7 @@ public class ApiServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)   throws ServletException, IOException {
     	
-    
-    	System.err.println("Get");
+ 
     	ApiRequestHandler handler = new ApiRequestHandler();
     	
         response.setContentType("application/json");
@@ -138,6 +137,7 @@ public class ApiServlet extends HttpServlet{
 			}
         	break;
         }
+        System.out.println(json);
         PrintWriter out = response.getWriter();
 		out.print(json);
         out.flush();
