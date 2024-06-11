@@ -61,6 +61,7 @@ public class ApiServlet extends HttpServlet{
         	json = handler.getPageCount(request);	
         	break;
         		
+
         }
         
         PrintWriter out = response.getWriter();
@@ -71,7 +72,6 @@ public class ApiServlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     	
-    	System.err.println("post");
         response.setContentType("application/json");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -88,6 +88,7 @@ public class ApiServlet extends HttpServlet{
        String json = new String();
         switch (request.getRequestURI()){
         
+     
         case "/zbank/api/createCustomer":
         	try {
 				json = handler.handleAddCustomer(request);
@@ -96,7 +97,6 @@ public class ApiServlet extends HttpServlet{
 				e.printStackTrace();
 			}
         	break;
-        	
         case "/zbank/api/createEmployee":
         	json = handler.handleAddEmployee(request);
         	break;
@@ -105,7 +105,6 @@ public class ApiServlet extends HttpServlet{
         	try {
 				json = 	handler.addBranch(request);
 			} catch (BankingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         	break;
@@ -136,7 +135,12 @@ public class ApiServlet extends HttpServlet{
 				e.printStackTrace();
 			}
         	break;
+        	
+        case "/zbank/api/editBranch":
+        	
+        	break;
         }
+        
         System.out.println(json);
         PrintWriter out = response.getWriter();
 		out.print(json);
@@ -164,8 +168,9 @@ public class ApiServlet extends HttpServlet{
         case "/zbank/api/customer":
         	json = handler.handleAddEmployee(request);
         	break;
-      
         }
+
+        
         PrintWriter out = response.getWriter();
 		out.print(json);
         out.flush();

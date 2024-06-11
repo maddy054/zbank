@@ -1,6 +1,7 @@
 package com.zbank.models;
 
-public class Customer extends User {
+
+public class Customer extends User{
 	
 	private long aadhar;
 	private String pan;

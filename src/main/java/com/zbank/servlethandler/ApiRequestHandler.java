@@ -35,15 +35,32 @@ public class ApiRequestHandler {
 		ZBank zbank = new ZBank();
     	String userId = request.getParameter("userId");
     	String json = new String();
+    	ResponseMessage responseMessage = new ResponseMessage();
     	try {
     		if(userId != null) {
     			Customer customer  = zbank.getCustomerDetails(Integer.parseInt(userId));	
-    			json = JSONConverter.getJson(customer);
+    			if(customer.getUserId() == 0) {
+    				responseMessage.setStatus(TransactionStatus.FAILED);
+    				responseMessage.setMessage("No Such User with User Id = "+userId);
+    				json = JSONConverter.getJson(responseMessage);
+    			}else {
+    				json = JSONConverter.getJson(customer);
+    			}
+    		
+    			
     		}else {
     			
     			int pageNo = Integer.parseInt(request.getParameter("pageno"));
     			List<Customer> allCustomer = zbank.getAllCustomer(15, getOffset(pageNo-1));
-    			json = JSONConverter.getJson(allCustomer);
+    			if(!allCustomer.isEmpty()) {
+    				json = JSONConverter.getJson(allCustomer);			
+    				
+    			}else {
+    				responseMessage.setStatus(TransactionStatus.FAILED);
+    				responseMessage.setMessage("No More Data to Load");
+    				json = JSONConverter.getJson(responseMessage);
+    			}
+    					
     		}
     		
 		} catch (NumberFormatException | BankingException e) {
@@ -74,16 +91,24 @@ public class ApiRequestHandler {
 	}
 	public String handleGetAccount(HttpServletRequest request) {
 		ZBank zbank = new ZBank();
+		String userId = request.getParameter("userId");
     	String accountNumber = request.getParameter("accountNumber");
     	String branchId = request.getParameter("branchId");
     	String json = new String();
     	
     	try{
+    		
     		if(accountNumber != null) {
     			Account account = zbank.getAccount(Long.parseLong(accountNumber));
     			json = JSONConverter.getJson(account);
     			
-    		}else if(branchId != null){
+    		}else if(userId != null) {
+    			Map<Long, Account> userAccount = zbank.getAccountDetails(Integer.parseInt(userId));
+    			json = JSONConverter.getJson(userAccount);
+    		}
+    		
+    		
+    		else if(branchId != null){
     			
     			Map<Integer, Map<Long, Account>> accounts = zbank.getAllAccounts(Integer.parseInt(branchId),(int) zbank.getAccountCount(Integer.parseInt(branchId)), 0);
     			
@@ -92,6 +117,7 @@ public class ApiRequestHandler {
     	} catch (NumberFormatException | BankingException e) {
 			e.printStackTrace();
 	}
+    	System.out.println(json);
     	return json;
 	}
 	
@@ -164,15 +190,16 @@ public class ApiRequestHandler {
 	setUser(customer, json);
 	setCustomer(customer,json);
 	
-	int userId = customer.getUserId();
+	
 	ResponseMessage responseMessage = new ResponseMessage();
-	responseMessage.setUserId(userId);
+
 	responseMessage.setStatus(TransactionStatus.SUCCESS);
 	responseMessage.setMessage("User Created Successfully");
 	
 	ZBank zBank = new ZBank();
 	try {
 		zBank.addCustomer(customer);
+		responseMessage.setUserId(zBank.getUsersId(customer.getMobile()));
 		
 	} catch (BankingException e) {
 		responseMessage.setStatus(TransactionStatus.FAILED);
@@ -217,11 +244,7 @@ public class ApiRequestHandler {
 		responseMessage.setMessage("User Activated Successfully");
 		Branch branch = new Branch();
 		
-		branch.setBranchName(json.get("branchName").toString());
-		
-		branch.setIfsc(Long.parseLong(json.get("ifsc").toString()));
-		branch.setAddress(json.get("address").toString());
-		branch.setModifiedBy(1);
+		setBranch(branch, json);
 		
 		ZBank zBank = new ZBank();
 		try {
@@ -291,6 +314,36 @@ public class ApiRequestHandler {
 		}
 		return  JSONConverter.getJson(responseMessage);
 		
+	}
+	
+	public String handleEditBranch(HttpServletRequest request) {
+		HashMap<String, Object> json = JSONConverter.getMapFromJson(request);
+		ResponseMessage responseMessage = new ResponseMessage();
+		
+		responseMessage.setStatus(TransactionStatus.SUCCESS);
+		responseMessage.setMessage("User Activated Successfully");
+
+		Branch branch = new Branch();
+		setBranch(branch, json);
+		
+		//ZBank zBank = new ZBank();
+//		try {
+//
+//			
+//		}catch(BankingException e) {
+//			
+//		}
+		return JSONConverter.getJson(responseMessage);
+		
+	}
+	
+	private void setBranch(Branch branch, HashMap<String, Object> json) {
+
+		branch.setBranchName(json.get("branchName").toString());
+		
+		branch.setIfsc(Long.parseLong(json.get("ifsc").toString()));
+		branch.setAddress(json.get("address").toString());
+		branch.setModifiedBy(1);
 	}
 	   private long getPages(long l) {
 		   long pages = l/limit;

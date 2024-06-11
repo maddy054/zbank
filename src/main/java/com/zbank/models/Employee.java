@@ -1,5 +1,6 @@
 package com.zbank.models;
 
+
 public class Employee extends User{
 	
 	private int branchId;

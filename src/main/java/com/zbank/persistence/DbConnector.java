@@ -267,11 +267,11 @@ public class DbConnector implements Connector {
 			String query = queryBuilder.where(1).buildSelect();
 			
 			List<Map<Integer, Object>> customerList = queryBuilder.executeQuery(query,userId);
-			if(customerList.size() == 0) {
-				throw new BankingException(ErrorCode.INVALID_CUSTOMER);
+			if(!(customerList.size() == 0)) {
+				setCustomer(customer,customerList.get(0));
+				getUser(customer, userId);
 			}
-			setCustomer(customer,customerList.get(0));
-			getUser(customer, userId);
+			
 			return customer;
 			
 		} catch (SQLException e) {

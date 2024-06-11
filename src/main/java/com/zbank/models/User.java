@@ -1,10 +1,12 @@
 package com.zbank.models;
 
+import java.io.Serializable;
+
 import com.zbank.enums.Gender;
 import com.zbank.enums.Status;
 import com.zbank.enums.UserType;
 
-public class User{
+public class User implements Serializable{
 	
 	private int userId;
 	private String password;

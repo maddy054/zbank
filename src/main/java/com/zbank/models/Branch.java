@@ -1,6 +1,8 @@
 package com.zbank.models;
 
-public class Branch {
+import java.io.Serializable;
+
+public class Branch implements Serializable{
 	private int branchId;
 	private String branchName;
 	private long ifsc;

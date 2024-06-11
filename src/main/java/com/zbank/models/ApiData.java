@@ -2,7 +2,7 @@ package com.zbank.models;
 
 import com.zbank.enums.ApiAuthorization;
 
-public class ApiData {
+public class ApiData{
 	private String ApiKey;
 	private long createdAt;
 	private int createdBy;

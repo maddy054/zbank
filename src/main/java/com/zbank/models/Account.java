@@ -1,9 +1,11 @@
 package com.zbank.models;
 
+import java.io.Serializable;
+
 import com.zbank.enums.AccountType;
 import com.zbank.enums.Status;
 
-public class Account {
+public class Account implements Serializable{
 	private int userId;
 	private long accountNo;
 	private long balance;
